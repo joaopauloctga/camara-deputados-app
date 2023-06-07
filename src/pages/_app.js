@@ -6,7 +6,9 @@ const MyApp = ({ Component, pageProps }) => {
   return (
       <>
         <Header />
-        <Component {...pageProps} />
+        <div className="container mx-auto">
+          <Component {...pageProps} />
+        </div>
       </>
   );
 };

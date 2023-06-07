@@ -1,132 +1,146 @@
-import React, { useState } from 'react';
-import Header from '@/app/header';
+import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
+
+const DeputadoDetails = ({ nome, siglaPartido, siglaUf, email, urlFoto }) => {
+  return (
+    <div className="w-full md:w-1/2 lg:w-1/4 p-4">
+      <div className="bg-white rounded-lg shadow-lg">
+        <Image src={urlFoto} alt={nome} className="w-full h-40 object-cover rounded-t-lg" width={100} height={100} />
+        <div className="p-4">
+          <h2 className="text-xl font-bold mb-2">{nome} - {siglaPartido}</h2>
+          <p className="text-gray-600">Sigla UF: {siglaUf}</p>
+          <p className="text-gray-600">Email: {email}</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const DeputadosPartidosFilter = ({ onChange, searchValue }) => {
+  const [partidos, setPartidos] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+
+
+  useEffect(() => {
+    const fetchPartidos = async () => {
+      try {
+        const response = await fetch('https://dadosabertos.camara.leg.br/api/v2/partidos');
+        const data = await response.json();
+        setPartidos(data.dados);
+      } catch (error) {
+        console.error('Error fetching partidos:', error);
+      }
+    };
+
+    fetchPartidos();
+  }, []);
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value)
+    const size = e.target.value.length;
+    if (size > 3) {
+      searchValue(e.target.value)
+    }
+    else if (size == 0) {
+      searchValue('')
+    }
+  }
+
+  return <>
+    <input type='text' placeholder='Pesquise pelo nome do deputado' value={searchQuery} onChange={handleSearchChange} />
+    <select onChange={(e) => onChange(e.target.value)}>
+      <option value="">All Partidos</option>
+      {partidos.map((partido) => (
+        <option key={partido.sigla} value={partido.sigla}>
+          {partido.nome}
+        </option>
+      ))}
+    </select>
+  </>
+};
 
 const DeputadosList = () => {
-  const [deputados, setDeputados] = useState([
-    {
-        "id": 220593,
-        "uri": "https://dadosabertos.camara.leg.br/api/v2/deputados/220593",
-        "nome": "Abilio Brunini",
-        "siglaPartido": "PL",
-        "uriPartido": "https://dadosabertos.camara.leg.br/api/v2/partidos/37906",
-        "siglaUf": "MT",
-        "idLegislatura": 57,
-        "urlFoto": "https://www.camara.leg.br/internet/deputado/bandep/220593.jpg",
-        "email": "dep.abiliobrunini@camara.leg.br"
-    },
-    {
-        "id": 204379,
-        "uri": "https://dadosabertos.camara.leg.br/api/v2/deputados/204379",
-        "nome": "Acácio Favacho",
-        "siglaPartido": "MDB",
-        "uriPartido": "https://dadosabertos.camara.leg.br/api/v2/partidos/36899",
-        "siglaUf": "AP",
-        "idLegislatura": 57,
-        "urlFoto": "https://www.camara.leg.br/internet/deputado/bandep/204379.jpg",
-        "email": "dep.acaciofavacho@camara.leg.br"
-    },
-    {
-        "id": 220714,
-        "uri": "https://dadosabertos.camara.leg.br/api/v2/deputados/220714",
-        "nome": "Adail Filho",
-        "siglaPartido": "REPUBLICANOS",
-        "uriPartido": "https://dadosabertos.camara.leg.br/api/v2/partidos/37908",
-        "siglaUf": "AM",
-        "idLegislatura": 57,
-        "urlFoto": "https://www.camara.leg.br/internet/deputado/bandep/220714.jpg",
-        "email": "dep.adailfilho@camara.leg.br"
-    },
-    {
-        "id": 221328,
-        "uri": "https://dadosabertos.camara.leg.br/api/v2/deputados/221328",
-        "nome": "Adilson Barroso",
-        "siglaPartido": "PL",
-        "uriPartido": "https://dadosabertos.camara.leg.br/api/v2/partidos/37906",
-        "siglaUf": "SP",
-        "idLegislatura": 57,
-        "urlFoto": "https://www.camara.leg.br/internet/deputado/bandep/221328.jpg",
-        "email": "dep.adilsonbarroso@camara.leg.br"
-    },
-    {
-        "id": 204560,
-        "uri": "https://dadosabertos.camara.leg.br/api/v2/deputados/204560",
-        "nome": "Adolfo Viana",
-        "siglaPartido": "PSDB",
-        "uriPartido": "https://dadosabertos.camara.leg.br/api/v2/partidos/36835",
-        "siglaUf": "BA",
-        "idLegislatura": 57,
-        "urlFoto": "https://www.camara.leg.br/internet/deputado/bandep/204560.jpg",
-        "email": "dep.adolfoviana@camara.leg.br"
-    },
-    {
-        "id": 204528,
-        "uri": "https://dadosabertos.camara.leg.br/api/v2/deputados/204528",
-        "nome": "Adriana Ventura",
-        "siglaPartido": "NOVO",
-        "uriPartido": "https://dadosabertos.camara.leg.br/api/v2/partidos/37901",
-        "siglaUf": "SP",
-        "idLegislatura": 57,
-        "urlFoto": "https://www.camara.leg.br/internet/deputado/bandep/204528.jpg",
-        "email": "dep.adrianaventura@camara.leg.br"
-    },
-    {
-        "id": 121948,
-        "uri": "https://dadosabertos.camara.leg.br/api/v2/deputados/121948",
-        "nome": "Adriano do Baldy",
-        "siglaPartido": "PP",
-        "uriPartido": "https://dadosabertos.camara.leg.br/api/v2/partidos/37903",
-        "siglaUf": "GO",
-        "idLegislatura": 57,
-        "urlFoto": "https://www.camara.leg.br/internet/deputado/bandep/121948.jpg",
-        "email": "dep.adrianodobaldy@camara.leg.br"
-    },
-    {
-        "id": 74646,
-        "uri": "https://dadosabertos.camara.leg.br/api/v2/deputados/74646",
-        "nome": "Aécio Neves",
-        "siglaPartido": "PSDB",
-        "uriPartido": "https://dadosabertos.camara.leg.br/api/v2/partidos/36835",
-        "siglaUf": "MG",
-        "idLegislatura": 57,
-        "urlFoto": "https://www.camara.leg.br/internet/deputado/bandep/74646.jpg",
-        "email": "dep.aecioneves@camara.leg.br"
-    },
-    {
-        "id": 136811,
-        "uri": "https://dadosabertos.camara.leg.br/api/v2/deputados/136811",
-        "nome": "Afonso Hamm",
-        "siglaPartido": "PP",
-        "uriPartido": "https://dadosabertos.camara.leg.br/api/v2/partidos/37903",
-        "siglaUf": "RS",
-        "idLegislatura": 57,
-        "urlFoto": "https://www.camara.leg.br/internet/deputado/bandep/136811.jpg",
-        "email": "dep.afonsohamm@camara.leg.br"
-    },
-    {
-        "id": 178835,
-        "uri": "https://dadosabertos.camara.leg.br/api/v2/deputados/178835",
-        "nome": "Afonso Motta",
-        "siglaPartido": "PDT",
-        "uriPartido": "https://dadosabertos.camara.leg.br/api/v2/partidos/36786",
-        "siglaUf": "RS",
-        "idLegislatura": 57,
-        "urlFoto": "https://www.camara.leg.br/internet/deputado/bandep/178835.jpg",
-        "email": "dep.afonsomotta@camara.leg.br"
+  const [items, setItems] = useState([]);
+  const [nextLink, setNextLink] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [partidoFilter, setPartidoFilter] = useState('');
+  const [nomeSearch, setNomeSearch] = useState('');
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      let url = 'http://localhost:3000/api/deputados';
+      if (nomeSearch == '') {
+        if (partidoFilter) {
+          url += `?siglaPartido=${partidoFilter}`;
+        } else {
+          url += '?itens=12';
+        }
+      }
+    
+      const response = await fetch(url);
+      const data = await response.json();
+
+      console.log(data)
+      
+      setItems(data.filter((d) => {
+        return nomeSearch == '' || d.nome.toLowerCase().includes(nomeSearch.toLocaleLowerCase())
+      }));
+      setNextLink(data.links.find((link) => link.rel === 'next')?.href);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setLoading(false);
     }
-]);
+  };
+
+  const loadMoreData = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(nextLink);
+      const data = await response.json();
+      setItems((prevItems) => [...prevItems, ...data.dados]);
+      setNextLink(data.links.find((link) => link.rel === 'next')?.href);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching more data:', error);
+      setLoading(false);
+    }
+  };
+
+  const handlePartidoFilterChange = (value) => {
+    setPartidoFilter(value);
+  };
+
+  const searchValue = (value) => {
+    setNomeSearch(value)
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, [partidoFilter, nomeSearch]);
 
   return (
-    <>
-      <div className="flex flex-wrap">
-        {deputados.map((deputado) => (
-          <div key={deputado.id} className="w-full sm:w-1/2 md:w-1/4 lg:w-1/4 xl:w-1/4 p-4">
-            <p>ID: {deputado.id}</p>
-            <p>Nome: {deputado.nome}</p>
-            <p>Sigla do Partido: {deputado.siglaPartido}</p>
-          </div>
-        ))}
-        </div>
-      </>
+    <div>
+      <DeputadosPartidosFilter onChange={handlePartidoFilterChange} searchValue={searchValue} />
+      <div className="flex flex-wrap -mx-4">
+      {items.map((item) => (
+        <DeputadoDetails
+          key={item.id}
+          nome={item.nome}
+          siglaPartido={item.siglaPartido}
+          siglaUf={item.siglaUf}
+          email={item.email}
+          urlFoto={item.urlFoto}
+        />
+      ))}
+    </div>
+      {nextLink && (
+        <button onClick={loadMoreData} disabled={loading}>
+          {loading ? 'Loading...' : 'Load More'}
+        </button>
+      )}
+    </div>
   );
 };
 
