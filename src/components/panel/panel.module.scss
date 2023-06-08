@@ -1,0 +1,36 @@
+.panel {
+  @apply w-full;
+
+  .panelHeader {
+    color: #5270BE;
+    font-family: 'Bitter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 28px;
+    @apply rounded-s-md rounded-e-md p-4 text-center;
+  }
+
+  .panelContent {
+    min-height: 300px;
+    @apply p-2;
+  }
+
+  &.light {
+    .panelHeader,
+    .panelContent {
+      background-color: #F1FFF5;
+    }
+  }
+
+  &.dark {
+    .panelHeader,
+    .panelContent {
+      background-color: #A4D2AB;
+    }
+
+    .panelHeader {
+      text-align: end;
+    }
+  }
+}

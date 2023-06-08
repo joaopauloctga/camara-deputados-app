@@ -1,0 +1,59 @@
+@import './variables';
+
+.t1,
+.t2,
+.t3 {
+  font-family: 'Bitter', serif;
+}
+
+.t1 {
+  font-style: 900;
+  font-size: 48px;
+  line-height: 58px;
+  font-weight: 900;
+}
+
+.t2 {
+  font-size: 38px;
+  font-weight: 800;
+  line-height: 48px;
+}
+
+.t3 {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 28px;
+}
+
+.t-circle {
+  width: 120px;
+  height: 120px;
+  background-color: $t-color-1;
+}
+
+.t-up {
+  text-transform: uppercase;
+}
+
+.t-icon {
+  font-size: 68px;
+}
+
+.text-primary {
+  color: $t-color-1;
+}
+
+.text-secondary {
+  color: $t-color-2;
+}
+
+.bg-color-1 {
+  background-color: $third-color;
+};
+.bg-color-2 {
+  background-color: $secondary-color;
+}
+
+.border-color-primary {
+  border-color: $t-color-1;
+}
