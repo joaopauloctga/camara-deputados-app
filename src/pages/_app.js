@@ -1,12 +1,14 @@
 import React from 'react';
-import Header from '@/app/header';
+import { useRouter } from 'next/router';
 import '../styles.css'
+import Header from '@/app/header';
 
 const MyApp = ({ Component, pageProps }) => {
+  const router = useRouter();
   return (
       <>
-        <Header />
-        <div className="container mx-auto">
+        <Header currentRoute={router} />
+        <div className="container mx-auto py-4">
           <Component {...pageProps} />
         </div>
       </>

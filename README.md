@@ -5,6 +5,29 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+Configure cache layer [not required] but strongly recommended.
+
+Up all containers, including the Redis container.
+```bash
+docker compose up -d
+```
+
+Create env.local file and added the following variables.
+
+NEXT_PUBLIC_API_DOMAIN=http://localhost:3000/api/
+CAMARA_REDIS_HOST=127.0.0.1
+CAMARA_REDIS_PORT=6379
+APPLICATION_CACHE_ENABLED=1
+APPLICATION_CACHE_SERVICE='redis'
+
+To disable the cache just set APPLICATION_CACHE_ENABLED to 0
+
+If you want to use another cache server replace the value of APPLICATION_CACHE_SERVICE
+But that is not enough, you need to add the implementation of this cache, look at redis.js and cache.js and follow the example.
+
+If you are running the Next application in another port or domain remember to update NEXT_PUBLIC_API_DOMAIN.
+
+
 First, run the development server:
 
 ```bash
