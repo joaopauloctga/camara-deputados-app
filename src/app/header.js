@@ -8,13 +8,12 @@ const Header = ({currentRoute}) => {
     ['Proposições', '/proposicoes'],
     ['Partidos', '/partidos'],
     ['Eventos', '/eventos'],
-    ['Entrar', '/entrar'],
   ];
   
-  const linkClass = 'text-gray-300 hover:bg-gray-700 hover:text-white';
-  const linkActive = 'bg-white text-black hover:bg-gray-700 hover:text-white'
+  const linkClass = 'text-white bg-hover-1 hover-primary';
+  const linkActive = 'bg-white t-secondary'
   return (
-    <nav className="bg-gray-800 py-4">
+    <nav className="bg-1 py-4">
       <div className="container mx-auto flex justify-between items-center">
         <div>
           <Link href="/">
@@ -25,11 +24,12 @@ const Header = ({currentRoute}) => {
           <ul className="flex space-x-4">
             {links.map((link, index) => {
               return <li key={`link-key-${index}`}>
-              <Link href={link[1]} className={`${link[1] == currentRoute?.pathname ? linkActive : linkClass} rounded-md px-3 py-2 text-sm font-medium`}>
+              <Link href={link[1]} className={`${link[1] == currentRoute?.pathname ? linkActive : linkClass} rounded-md px-3 py-2`}>
                 {link[0]}
               </Link>
             </li>
             })}
+            <li style={{'margin-left': '75px'}}><Link href='/entrar' className='btn-1'>Entrar</Link></li>
           </ul>
         </div>
       </div>

@@ -65,6 +65,7 @@ const DeputadosList = () => {
       <div className="flex flex-wrap -mx-4">
         {items.map((item) => (
           <DeputadoDetails
+            id={item.id}
             key={item.id}
             nome={item.nome}
             siglaPartido={item.siglaPartido}

@@ -6,6 +6,14 @@
   font-family: 'Bitter', serif;
 }
 
+p, span {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0em;
+}
+
 .t1 {
   font-style: 900;
   font-size: 48px;
@@ -28,7 +36,7 @@
 .t-circle {
   width: 120px;
   height: 120px;
-  background-color: $t-color-1;
+  background-color: $color-4;
 }
 
 .t-up {
@@ -39,21 +47,60 @@
   font-size: 68px;
 }
 
-.text-primary {
-  color: $t-color-1;
+.t-icon-4 {
+  font-size: 28px;
 }
 
-.text-secondary {
-  color: $t-color-2;
+.bg-1 {
+  background-color: $color-1;
+  color: $white;
 }
 
-.bg-color-1 {
-  background-color: $third-color;
-};
-.bg-color-2 {
-  background-color: $secondary-color;
+.bg-2 {
+  background-color: $color-2;
+  color: $black;
 }
 
-.border-color-primary {
-  border-color: $t-color-1;
+.bg-3 {
+  background-color: $color-3;
+  color: $black;
+}
+
+.bg-4 {
+  background-color: $color-4;
+  color: $white;
+}
+
+.bg-4-inverse {
+  background-color: $white;
+  color: $color-4;
+}
+
+.bg-hover-1:hover {
+  background-color: $white;
+  color: $color-1;
+}
+
+.bg-hover-2:hover {
+  background-color: $color-4;
+  color: $white;
+}
+
+.border-color-1 {
+  border-color: $color-4;
+}
+
+.t-primary {
+  color: $color-4;
+}
+
+.t-secondary {
+  color: $white;
+}
+
+.btn-1 {
+  @apply rounded-md px-3 py-2 text-sm font-medium;
+  background-color: $color-4;
+  color: $white;
+  text-transform: uppercase;
 }

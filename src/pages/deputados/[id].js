@@ -1,7 +1,14 @@
 import React from "react";
 import Panel from "@/components/panel/panel";
+import InfoCardRounded from "@/components/apresentations/info-card-rounded";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookOpen, faSitemap, faFlag, faBuilding } from "@fortawesome/free-solid-svg-icons";
+import { faBookOpen, faSitemap, faFlag, faBuilding, faChartPie, faCalendar } from "@fortawesome/free-solid-svg-icons";
+import InfoCardTitle from "@/components/apresentations/info-card-title";
+import InfoCarList from "@/components/apresentations/info-card-list";
+import CamaraPie from "@/components/charts/camara-pie";
+import CamaraBar from "@/components/charts/camara-bar";
+import PaginationDate from "@/components/pagination-date";
+import InfoCardTime from "@/components/apresentations/info-card-time";
 
 
 const person = {
@@ -13,33 +20,15 @@ const person = {
   profilePhotoUrl: '123',
 };
 
-function InfoCard({ title, value, color }) {
-  return (
-    <div className="flex flex-col items-center">
-      <div className="mb-4">
-        <p className="font-bold">{title}</p>
-      </div>
-      <div className={`w-8 h-8 rounded-full ml-2 ${color} t-circle`}>
-        <p className="text-white flex items-center justify-center h-full t2">{value}</p>
-      </div>
-    </div>
-  );
-}
-
 function PropositionItem({date, sigla, text}) {
   return (
-    <>
-      <div className="flex items-center justify-items-center mb-4">
-        <div className="w-1/12 text-center">
-          <h6>{sigla}</h6>
-          <p>{date}</p>
-        </div>
-        <div className="border-2 border-color-primary m-2" style={{height: '80px'}}></div>
-        <div className="w-11/12">
-          <p className="">{text}</p>
-        </div>
+    <div className="flex items-center mb-4">
+      <div className="w-1/12 text-center">
+        <h6>{sigla}</h6>
+        <p>{date}</p>
       </div>
-    </>
+      <div className="w-11/12"><InfoCarList text={text} /></div>
+    </div>
   )
 }
 
@@ -99,8 +88,8 @@ function DeputadoPage({id}) {
       <div className="flex">
         <div className="w-1/5">
           <div className="flex flex-col justify-evenly h-full">
-            <InfoCard title={'Projetos de sua autoria'} value='20' color={'bg-blue-500'} />
-            <InfoCard title={'Aprovadas'} value='6' color={'bg-blue-500'} />
+            <InfoCardRounded title={'Projetos de sua autoria'} value='20' color={'bg-blue-500'} />
+            <InfoCardRounded title={'Aprovadas'} value='6' color={'bg-blue-500'} />
           </div>
         </div>
         <div className="w-4/5">
@@ -116,40 +105,61 @@ function DeputadoPage({id}) {
     <Panel right title={'Atividade Parlamentar'} icon={<FontAwesomeIcon icon={faBookOpen} />}>
       <div className="flex flex-wrap justify-center items-center p-2">
         <div className="w-1/3">
-          <div className="flex items-center justify-center text-white">
-            <div className="t-icon mr-4">
-              <FontAwesomeIcon icon={faSitemap} />
-            </div>
-            <h3 className="t3">Orgãos Atuantes</h3>
-          </div>
+          <InfoCardTitle title={'Orgãos Atuantes'} icon={faSitemap} />
         </div>
         <div className="w-1/3">
-        <div className="flex items-center justify-center text-white">
-            <div className="t-icon mr-4">
-              <FontAwesomeIcon icon={faBuilding} />
-            </div>
-            <h3 className="t3">Ocupações</h3>
-          </div>
+          <InfoCardTitle title={'Ocupações'} icon={faBuilding} />
         </div>
         <div className="w-1/3">
-        <div className="flex items-center justify-center text-white">
-            <div className="t-icon mr-4">
-              <FontAwesomeIcon icon={faFlag} />
-            </div>
-            <h3 className="t3">Frentes</h3>
-          </div>
+          <InfoCardTitle title={'Frentes'} icon={faFlag} />
         </div>
       </div>
       <div className="rounded-lg bg-white m-6 grid grid-gap-4 grid-cols-2 grid-rows-2">
         {[1,2,3,4].map(() => {
           return <div className="p-4">
-            <div className="border-l-4 border-color-primary p-2">
-              <p className="underline decoration-solid text-xs">CCJC</p>
-              <p>Comissão de Constituição e Justiça e de Cidadania </p>
-              <p className="underline decoration-solid text-xs">15 Abril 2023 - Suplente</p>
-            </div>
+            <InfoCarList 
+              text="Comissão de Constituição e Justiça e de Cidadania"
+              smTitle='CCJC'
+              subText='15 Abril 2023 - Suplente' />
           </div>
         })}
+      </div>
+    </Panel>
+
+    <div className="m-8"></div>
+
+    <Panel title={'Despesas Parlamentares'} icon={<FontAwesomeIcon icon={faChartPie} />}>
+      <div className="flex flex-wrap items-center justify-center">
+        <div className="w-1/2 p-4">
+          <CamaraPie height={400} width={600} />
+        </div>
+        <div className="w-1/2 p-4">
+          <CamaraBar height={400} width={600} />
+        </div>
+      </div>
+    </Panel>
+
+    <div className="m-8"></div>
+
+    <Panel right title={'Eventos'} icon={<FontAwesomeIcon icon={faCalendar} />}>
+      <div className="flex">
+        <div className="w-1/12 p-4">
+          <PaginationDate startDate={new Date()} numDates={2} />
+        </div>
+        <div className="w-10/12 p-4">
+          <div className="grid grid-cols-3 gap-3">
+            <InfoCardTime time="8:00" title="Sessão Deliberativa" description="Plenário da Câmara dos Deputados"/>
+            <InfoCardTime active time="8:00" title="Sessão Deliberativa" description="Plenário da Câmara dos Deputados"/>
+            <InfoCardTime time="8:00" title="Sessão Deliberativa" description="Plenário da Câmara dos Deputados"/>
+          </div>
+          <p className="p-4 mt-4 bg-white rounded-md">
+            In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.
+            In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.
+
+            In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.
+          </p>
+        </div>
+        <div className="w-1/12 p-4">Resources</div>
       </div>
     </Panel>
   </>
