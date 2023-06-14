@@ -11,7 +11,7 @@ function Panel({children, right, title, icon}) {
     direction = 'text-right';
     bgColor = 'bg-2'
     radiusTitle = 'rounded-tl-lg';
-    tColor = 't-secondary';
+    tColor = 't-white';
     justifyTitle = 'justify-end';
   }
   return <>

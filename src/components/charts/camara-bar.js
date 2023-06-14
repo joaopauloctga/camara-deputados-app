@@ -19,13 +19,14 @@ ChartJS.register(
   Legend
 );
 
-function CamaraBar({height, width}) {
+function CamaraBar({height, width, labels, values}) {
 
   const options = {
     responsive: true,
     plugins: {
       legend: {
         position: 'top',
+        display: false
       },
       title: {
         display: true,
@@ -34,14 +35,26 @@ function CamaraBar({height, width}) {
     },
   }
 
-  const labels = ['January', 'February', 'March', 'April', 'May'];
-
+  const meses = [
+    'Janeiro',
+    'Fevereiro',
+    'Março',
+    'Abril',
+    'Maio',
+    'Junho',
+    'Julho',
+    'Agosto',
+    'Setembro',
+    'Outubro',
+    'Novembro',
+    'Dezembro'
+  ];
   const data = {
-    labels,
+    labels: labels.map((m) => meses[m-1]),
     datasets: [
       {
         label: 'Gasto Mensal',
-        data: labels.map(() => Math.random() * 1000),
+        data: values,
         backgroundColor: '#5270BE',
       }
     ],

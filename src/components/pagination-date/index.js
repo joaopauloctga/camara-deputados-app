@@ -11,7 +11,7 @@ function DateItem({date, eventDate}) {
   </div>
 }
 
-function PaginationDate({startDate, numDates}) {
+function PaginationDate({startDate, numDates, setDate}) {
   const [selectedDate, setSelectedDate] = useState(startDate);
   const [dates, setDates] = useState([]);
   const [regenerate, setRegenerate] = useState(true);
@@ -21,6 +21,7 @@ function PaginationDate({startDate, numDates}) {
     if (regenerate) {
       setDates(generateDates(selectedDate, numDates))
     }
+    setDate(selectedDate)
   }, [selectedDate, numDates]);
 
   const handleDateSelection = (date) => {
@@ -57,7 +58,6 @@ function PaginationDate({startDate, numDates}) {
         ))}
         <li className="p-1 t-primary t-icon-4 cursor-pointer" onClick={increaseStartDate}><FontAwesomeIcon icon={faCircleChevronDown} /></li>
       </ul>
-      {selectedDate.getDate()}
     </div>
   );
 }
