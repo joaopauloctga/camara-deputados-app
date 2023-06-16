@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Panel from "@/components/panel/panel";
 import InfoCardRounded from "@/components/apresentations/info-card-rounded";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookOpen, faIdBadge, faChartPie, faCalendar } from "@fortawesome/free-solid-svg-icons";
+import { faBookOpen, faChartPie, faCalendar, faHandPointer } from "@fortawesome/free-solid-svg-icons";
 import CamaraPie from "@/components/charts/camara-pie";
 import CamaraBar from "@/components/charts/camara-bar";
 
@@ -12,15 +12,8 @@ import { deputadoExpenses } from "@/components/deputado/DeputadoExpenses";
 import Events from "@/components/eventos/Events";
 import DeputadoActivity from "@/components/deputado/DeputadoActivity";
 import DeputadoCurriculo from "@/components/deputado/DeputadoCurriculo";
-
-const person = {
-  name: 'Joao Paulo Constino',
-  birthdate: '18/05/1992',
-  email: 'joaopauloctga@gmail.com',
-  address: 'Rua pedro vieira da silva',
-  partido: 'PT',
-  profilePhotoUrl: '123',
-};
+import DeputadoProfile from "@/components/deputado/DeputadoProfile";
+import DeputadoVotos from "@/components/deputado/DeputadoVotos";
 
 function DeputadoPage() {
   const router = useRouter();
@@ -60,30 +53,12 @@ function DeputadoPage() {
       .then((resp) => resp.json())
       .then(({dados}) => setEventsByDate(dados))
   }, [dateEvent, id])
-  
-  const { name, birthdate, email, address, partido, profilePhotoUrl } = person;
 
   return <>
-    <div className="flex">
-      <div className="w-1/2">
-        <img
-            className="h-48 w-full object-cover"
-            src={profilePhotoUrl}
-            alt={`${name}'s profile`}
-          />
-      </div>
-      <div className="w-1/2">
-        <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">
-          {name}
-        </div>
-        <p className="text-gray-500 text-sm">{`Birthdate: ${birthdate}`}</p>
-        <p className="text-gray-500 text-sm">{`Email: ${email}`}</p>
-        <p className="text-gray-500 text-sm">{`Address: ${address}`}</p>
-        <p className="text-gray-500 text-sm">{`Partido: ${partido}`}</p>
-      </div>
-    </div>
+    
+    <DeputadoProfile id={id} />
 
-    <Panel title={'Proposições'} icon={<FontAwesomeIcon icon={faBookOpen} />}>
+    <Panel id="proposicoes" title={'Proposições'} icon={<FontAwesomeIcon icon={faBookOpen} />}>
       <div className="flex">
         <div className="w-1/5">
           <div className="flex flex-col justify-evenly h-full">
@@ -101,13 +76,7 @@ function DeputadoPage() {
 
     <div className="m-8"></div>
 
-    <Panel right title={'Atividade Parlamentar'} icon={<FontAwesomeIcon icon={faBookOpen} />}>
-      <DeputadoActivity id={id} />
-    </Panel>
-
-    <div className="m-8"></div>
-
-    <Panel title={'Despesas Parlamentares'} icon={<FontAwesomeIcon icon={faChartPie} />}>
+    <Panel id="depesas" right title={'Despesas Parlamentares'} icon={<FontAwesomeIcon icon={faChartPie} />}>
       <div className="flex flex-wrap items-center justify-center">
         <div className="w-1/2 p-4">
           <CamaraPie labels={Object.keys(expenseByType)} values={Object.values(expenseByType)} height={400} width={600} />
@@ -120,14 +89,26 @@ function DeputadoPage() {
 
     <div className="m-8"></div>
 
-    <Panel right title={'Eventos'} icon={<FontAwesomeIcon icon={faCalendar} />}>
+    <div id="curriculo">
+      <DeputadoCurriculo id={id} />
+    </div>
+
+    <div className="m-8"></div>
+
+    <div className="m-8"></div>
+
+    <Panel id="eventos" title={'Eventos'} icon={<FontAwesomeIcon icon={faCalendar} />}>
       <Events events={eventsByDate} dateEvent={dateEvent} callbackDateChange={updateDateEvent} />
+    </Panel>
+
+    <Panel right id="atividade" title={'Atividade Parlamentar'} icon={<FontAwesomeIcon icon={faBookOpen} />}>
+      <DeputadoActivity id={id} />
     </Panel>
 
     <div className="m-8"></div>
 
-    <Panel title={'Empregos / Profissões'} icon={<FontAwesomeIcon icon={faIdBadge} />}>
-      <DeputadoCurriculo id={id} />
+    <Panel id="votos" title={'Votos'} icon={<FontAwesomeIcon icon={faHandPointer} />} >
+      <DeputadoVotos id={id} />
     </Panel>
   </>
 }

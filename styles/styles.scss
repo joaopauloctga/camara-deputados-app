@@ -32,13 +32,15 @@ p, span {
 }
 
 .t4 {
-  font-size: 18px;
+  font-size: 20px;
   line-height: 24px;
+  font-weight: 600;
 }
 
 .t5 {
-  font-size: 14px;
+  font-size: 18px;
   line-height: 18px;
+  font-weight: 500;
 }
 
 .t-circle {
@@ -135,4 +137,44 @@ p, span {
   background-color: $color-4;
   color: $white;
   text-transform: uppercase;
+}
+
+.btn-2 {
+  @apply rounded-md px-2 py-1;
+  font-size: 10px;
+  background-color: $color-4;
+  color: $white;
+  text-transform: uppercase;
+}
+
+.danger {
+  color: #F86262;
+}
+
+.warning {
+  color: #FAE655;
+}
+
+.info {
+  color: #5BAFD3;
+}
+
+.success {
+  color: #84D79C;
+}
+
+.bg-danger {
+  color: #F86262;
+}
+
+.bg-warning {
+  color: #FAE655;
+}
+
+.bg-info {
+  color: #5BAFD3;
+}
+
+.bg-success {
+  color: #84D79C;
 }
