@@ -5,7 +5,7 @@ import { faCircleChevronDown, faCircleChevronUp } from "@fortawesome/free-solid-
 function DateItem({date, eventDate}) {
   const options = { weekday: 'short' };
   const dayOfWeek = date.toLocaleDateString('pt-BR', options);
-  return <div className={`text-center ${date.getDate() == eventDate.getDate() ? 'bg-4-inverse' : 'bg-4'}`}>
+  return <div className={`text-center ${date.getDate() == eventDate.getDate() ? 'bg-4-inverse border rounded-sm border-color-1' : 'bg-4 rounded-sm'}`}>
     <h4>{date.getDate()}</h4>
     <h4>{dayOfWeek}</h4>
   </div>
