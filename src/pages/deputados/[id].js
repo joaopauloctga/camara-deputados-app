@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Panel from "@/components/panel/panel";
 import InfoCardRounded from "@/components/apresentations/info-card-rounded";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookOpen, faSitemap, faFlag, faBuilding, faChartPie, faCalendar, faCalendarXmark } from "@fortawesome/free-solid-svg-icons";
+import { faBookOpen, faIdBadge, faChartPie, faCalendar } from "@fortawesome/free-solid-svg-icons";
 import CamaraPie from "@/components/charts/camara-pie";
 import CamaraBar from "@/components/charts/camara-bar";
 
@@ -11,6 +11,7 @@ import DeputadoProposicoes from "@/components/deputado/DeputadoProposicoes";
 import { deputadoExpenses } from "@/components/deputado/DeputadoExpenses";
 import Events from "@/components/eventos/Events";
 import DeputadoActivity from "@/components/deputado/DeputadoActivity";
+import DeputadoCurriculo from "@/components/deputado/DeputadoCurriculo";
 
 const person = {
   name: 'Joao Paulo Constino',
@@ -82,7 +83,6 @@ function DeputadoPage() {
       </div>
     </div>
 
-    
     <Panel title={'Proposições'} icon={<FontAwesomeIcon icon={faBookOpen} />}>
       <div className="flex">
         <div className="w-1/5">
@@ -122,6 +122,12 @@ function DeputadoPage() {
 
     <Panel right title={'Eventos'} icon={<FontAwesomeIcon icon={faCalendar} />}>
       <Events events={eventsByDate} dateEvent={dateEvent} callbackDateChange={updateDateEvent} />
+    </Panel>
+
+    <div className="m-8"></div>
+
+    <Panel title={'Empregos / Profissões'} icon={<FontAwesomeIcon icon={faIdBadge} />}>
+      <DeputadoCurriculo id={id} />
     </Panel>
   </>
 }

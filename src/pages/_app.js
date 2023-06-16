@@ -7,6 +7,7 @@ import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 config.autoAddCss = false
 import Head from 'next/head';
+import Footer from '@/app/footer';
 
 const MyApp = ({ Component, pageProps }) => {
   const router = useRouter();
@@ -22,6 +23,7 @@ const MyApp = ({ Component, pageProps }) => {
         <div className="container mx-auto py-4">
           <Component {...pageProps} />
         </div>
+        <Footer />
       </>
   );
 };

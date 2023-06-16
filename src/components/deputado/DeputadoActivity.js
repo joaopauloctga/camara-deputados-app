@@ -83,18 +83,13 @@ function DeputadoActivity({id}) {
         <InfoCardTitle active={activityDisplayId == 1} onClick={() => setActivityDisplayId(1)} title={'Orgãos Atuantes'} icon={faSitemap} />
       </div>
       <div className="w-1/3">
-        <InfoCardTitle active={activityDisplayId == 2}  onClick={() => setActivityDisplayId(2)} title={'Ocupações'} icon={faBuilding} />
-      </div>
-      <div className="w-1/3">
-        <InfoCardTitle active={activityDisplayId == 3}  onClick={() => setActivityDisplayId(3)} title={'Frentes'} icon={faFlag} />
+        <InfoCardTitle active={activityDisplayId == 2}  onClick={() => setActivityDisplayId(3)} title={'Frentes'} icon={faFlag} />
       </div>
     </div>
 
     {activityDisplayId == 1 && <DeputadoOrgaos id={id} />}
 
-    {activityDisplayId == 2 && <DeputadoOcupacoes id={id} />}
-
-    {activityDisplayId == 3 && <DeputadoFrentes id={id} />}
+    {activityDisplayId == 2 && <DeputadoFrentes id={id} />}
   </>
 }
 
