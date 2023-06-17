@@ -3,22 +3,22 @@ import LoadingAPI from "../loading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendar, faBuildingUser, faAt, faGraduationCap, faPeopleGroup, faChartPie, faBookOpen, faHandPointer } from "@fortawesome/free-solid-svg-icons";
 import ProfilePhoto from "./ProfilePhoto";
+import useCamaraAPI from "@/hooks/useCamaraAPI";
 
 function DeputadoProfile({id}) {
   const [deputado, setDeputado] = useState(null);
+  const {isLoading, result} = useCamaraAPI({
+    url: `deputados/${id}`
+  })
 
   useEffect(() => {
-    if (id == undefined) {
-      return;
-    }
-    fetch(`https://dadosabertos.camara.leg.br/api/v2/deputados/${id}`)
-      .then(resp => resp.json())
-      .then(({dados}) => setDeputado({...dados, ...dados.ultimoStatus}))
+    if (!isLoading) {
+      setDeputado({...result, ...result.ultimoStatus})
+    }    
+  }, [isLoading]);
 
-    
-  }, [id]);
 
-  if (id == undefined || deputado == null) {
+  if (isLoading || deputado == null) {
     return <LoadingAPI />
   }
 

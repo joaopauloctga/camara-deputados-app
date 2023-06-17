@@ -38,7 +38,7 @@ function DeputadoPage() {
         return result;
       }, {}));
     }
-  }, [loading])
+  }, [loading]);
 
   useEffect(() => {
     if (id == undefined) {
@@ -56,7 +56,7 @@ function DeputadoPage() {
 
   return <>
     
-    <DeputadoProfile id={id} />
+    {id !== undefined && <DeputadoProfile id={id} />}
 
     <Panel id="proposicoes" title={'Proposições'} icon={<FontAwesomeIcon icon={faBookOpen} />}>
       <div className="flex">
