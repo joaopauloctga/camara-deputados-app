@@ -2,7 +2,7 @@ export default async function handler(req, res) {
   const { query } = req;
   const resp = await fetch('https://dadosabertos.camara.leg.br/arquivos/votacoesVotos/json/votacoesVotos-2023.json');
   const {dados} = await resp.json();
-  const deputado = dados.filter((voto) => voto.deputado_.id == query.deputado).slice(0,10);
+  const deputado = dados.filter((voto) => voto.deputado_.id == query.deputado).slice(0,6);
 
   const allData = [];
   for (let i=0; i<deputado.length; i++) {

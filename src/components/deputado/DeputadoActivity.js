@@ -10,7 +10,7 @@ function DeputadoFrentes({id}) {
   const [search, updateSearch] = useState('');
   const [frentes, setFrentes] = useState([]);
   const {isLoading, result} = useCamaraAPI({
-    url: `https://dadosabertos.camara.leg.br/api/v2/deputados/${id}/frentes`
+    url: `deputados/${id}/frentes`
   })
 
   useEffect(() => {

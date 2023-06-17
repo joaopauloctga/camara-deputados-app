@@ -68,7 +68,7 @@ function DeputadoPage() {
         </div>
         <div className="w-4/5">
           <div className="flex flex-col rounded-sm border-1 border-solid p-2">
-            <DeputadoProposicoes deputadoId={id} />
+            {id !== undefined && <DeputadoProposicoes deputadoId={id} />}
           </div>
         </div>
       </div>
@@ -90,7 +90,7 @@ function DeputadoPage() {
     <div className="m-8"></div>
 
     <div id="curriculo">
-      <DeputadoCurriculo id={id} />
+      {id !== undefined && <DeputadoCurriculo id={id} />}
     </div>
 
     <div className="m-8"></div>
