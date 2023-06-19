@@ -14,7 +14,7 @@ function getPaginationLinks (links) {
   }
 }
 
-function useCamaraAPI({url, subRequest}) {
+function useCamaraAPI({url, subRequest, config}) {
   const [result, setResult] = useState([]);
   const [isLoading, updateLoadingStatus] = useState(true);
   const [nextPage, setNextPage] = useState(null);
@@ -47,13 +47,18 @@ function useCamaraAPI({url, subRequest}) {
       lastPageLink,
       firstPageLink
     } = getPaginationLinks(links);
-
+    
     setFirstPage(firstPageLink?.href || null);
     setLastPage(lastPageLink?.href || null);
     setNextPage(nextPageLink?.href || null);
     setPreviousPage(previousPageLink?.href || null);
     updateLoadingStatus(false)
-    setResult(data)
+    setResult((prevItems) => {
+      if (config?.loadMore) {
+        return [...prevItems, ...data]
+      }
+      return data;
+    })
     updateLoadingStatus(false);
   }
 

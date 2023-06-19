@@ -37,7 +37,7 @@ function DeputadoVotos({ id }) {
   }
   return <>
     <div className="flex flex-wrap">
-      {votos.map((v, index) => <div className="w-1/2 p-4" key={`voto-id-${index}`}>
+      {votos.map((v, index) => <div className="w-full lg:w-1/2 p-4" key={`voto-id-${index}`}>
           <Votacao 
             votacaoId={v.idVotacao} 
             proposicaoId={v.ultimaApresentacaoProposicao.uriProposicaoCitada} 

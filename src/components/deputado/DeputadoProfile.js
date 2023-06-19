@@ -22,8 +22,8 @@ function DeputadoProfile({id}) {
     return <LoadingAPI />
   }
 
-  return <div className="flex m-4">
-    <div className="w-1/2">
+  return <div className="flex flex-wrap m-4">
+    <div className="w-full lg:w-1/2">
       <ProfilePhoto foto={deputado.urlFoto} alt={`Deputado ${deputado.nome} foto de perfil`} />
       <ul className="flex t-primary justify-around p-1 border mt-4 border-color-1 rounded-sm">
         <li className="mr-4"><a href="#depesas"><FontAwesomeIcon icon={faChartPie} /> Despesas</a></li>
@@ -33,7 +33,7 @@ function DeputadoProfile({id}) {
         <li className="mr-4"><a href="#votos"><FontAwesomeIcon icon={faHandPointer} /> Votos</a></li>
       </ul>
     </div>
-    <div className="w-1/2 uppercase t-primary">
+    <div className="w-full lg:w-1/2 uppercase t-primary">
       <div className="my-1">
         <h3 className="t2">{deputado.nomeEleitoral}</h3>
         <p className="t5"> {deputado.nomeCivil}</p>

@@ -6,8 +6,14 @@ export const getCache = async (key) => {
     port: process.env.CAMARA_REDIS_PORT,
   });
 
-  await client.connect();
-  return await client.get(key);
+  try {
+    await client.connect();
+    return await client.get(key);
+  }
+  catch(e) {
+    console.log(`Failed to connect with redis: ${e}`)
+    return null;
+  }
 }
 
 export const setCache = (key, data) => {

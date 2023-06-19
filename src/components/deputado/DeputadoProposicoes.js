@@ -5,12 +5,12 @@ import useCamaraAPI from '@/hooks/useCamaraAPI';
 
 function PropositionItem({date, sigla, text}) {
   return (
-    <div className="flex items-center mb-4">
-      <div className="w-1/12 text-center">
+    <div className="flex flex-wrap xs:flex-col lg:items-center mb-4">
+      <div className="w-full lg:w-1/12 text-left lg:text-center">
         <h6>{sigla}</h6>
         <p>{date}</p>
       </div>
-      <div className="w-11/12"><InfoCarList text={text} /></div>
+      <div className="w-full lg:w-11/12"><InfoCarList text={text} /></div>
     </div>
   )
 }
@@ -33,7 +33,7 @@ const DeputadoProposicoes = ({ deputadoId }) => {
     <div>
       <ul>
         {proposicoes.map((p) => (
-          <PropositionItem key={p.id} sigla={p.siglaTipo} text={p.ementa} date={p.ano} />
+          <PropositionItem key={p.id} sigla={`${p.numero} - ${p.siglaTipo}`} text={p.ementa} date={p.ano} />
         ))}
       </ul>
       <div className='text-center'>

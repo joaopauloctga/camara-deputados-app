@@ -17,7 +17,7 @@ function Panel({children, right, title, icon, id}) {
     border = 'border border-color-1'
   }
   return <>
-    <div className="flex flex-wrap" id={id}>
+    <div className="flex flex-wrap mx-2 lg:mx-0" id={id}>
       <div className={`w-full`}>
         <div className={`flex ${justifyTitle}`}>
           <h3 style={{borderBottom: 0}} className={`${direction} ${bgColor} ${tColor} ${border} rounded-t-lg t3 px-4 py-2`}> {icon} {title}</h3>

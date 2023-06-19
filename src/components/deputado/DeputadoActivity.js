@@ -27,8 +27,8 @@ function DeputadoFrentes({id}) {
   return <>
     <div className="flex flex-column flex-wrap justify-center">
       {search}
-      <input className="flex-auto w-2/3 form-input mx-8 rounded-md" onChange={(e) => updateSearch(e.currentTarget.value)} placeholder="Pequisar por frente" />
-      <div style={{maxHeight: '500px', overflow: 'auto'}} className="rounded-lg bg-white m-6 grid grid-gap-4 grid-cols-2 grid-rows-2">
+      <input className="flex-auto w-full lg:w-2/3 form-input mx-8 rounded-md" onChange={(e) => updateSearch(e.currentTarget.value)} placeholder="Pequisar por frente" />
+      <div style={{maxHeight: '500px', overflow: 'auto'}} className="rounded-lg bg-white grid grid-gap-4 grid-cols-1 lg:grid-cols-2 auto-rows-auto">
         {frentes.map(frente => {
           return <div key={frente.id} className="p-2">
             <InfoCarList 
@@ -57,9 +57,9 @@ function DeputadoOrgaos({id}) {
     return <LoadingAPI />
   }
   
-  return <div className="rounded-lg bg-white m-6 grid grid-gap-4 grid-cols-2 grid-rows-2">
+  return <div className="rounded-lg bg-white grid grid-gap-4 grid-cols-1 lg:grid-cols-2 auto-rows-auto">
     {orgaos.map((orgao) => {
-      return <div key={orgao.idOrgao} className="p-4">
+      return <div key={orgao.idOrgao} className="p-2">
         <InfoCarList 
           text={orgao.nomeOrgao}
           smTitle={`${orgao.titulo}`}
@@ -76,11 +76,11 @@ function DeputadoActivity({id}) {
   }
   return <>
     <div className="flex flex-wrap">
-      <div className="w-1/2">
+      <div className="w-full lg:w-1/2">
         <InfoCardTitle active={true} title={'Orgãos Atuantes'} icon={faSitemap} />
         <DeputadoOrgaos id={id} />
       </div>
-      <div className="w-1/2">
+      <div className="w-full lg:w-1/2">
         <InfoCardTitle active={true} title={'Frentes'} icon={faFlag} />
         <DeputadoFrentes id={id} />
       </div>

@@ -59,14 +59,14 @@ function DeputadoPage() {
     {id !== undefined && <DeputadoProfile id={id} />}
 
     <Panel id="proposicoes" title={'Proposições'} icon={<FontAwesomeIcon icon={faBookOpen} />}>
-      <div className="flex">
-        <div className="w-1/5">
+      <div className="flex flex-wrap">
+        <div className="w-full lg:w-1/5">
           <div className="flex flex-col justify-evenly h-full">
             <InfoCardRounded title={'Projetos de sua autoria'} value='20' color={'bg-blue-500'} />
             <InfoCardRounded title={'Aprovadas'} value='6' color={'bg-blue-500'} />
           </div>
         </div>
-        <div className="w-4/5">
+        <div className="w-full lg:w-4/5">
           <div className="flex flex-col rounded-sm border-1 border-solid p-2">
             {id !== undefined && <DeputadoProposicoes deputadoId={id} />}
           </div>
@@ -78,10 +78,10 @@ function DeputadoPage() {
 
     <Panel id="depesas" right title={'Despesas Parlamentares'} icon={<FontAwesomeIcon icon={faChartPie} />}>
       <div className="flex flex-wrap items-center justify-center">
-        <div className="w-1/2 p-4">
+        <div className="w-full lg:w-1/2 p-4">
           <CamaraPie labels={Object.keys(expenseByType)} values={Object.values(expenseByType)} height={400} width={600} />
         </div>
-        <div className="w-1/2 p-4">
+        <div className="w-full lg:w-1/2 p-4">
           <CamaraBar labels={Object.keys(expenseByMonth)} values={Object.values(expenseByMonth)} height={400} width={600} />
         </div>
       </div>
@@ -95,11 +95,11 @@ function DeputadoPage() {
 
     <div className="m-8"></div>
 
-    <div className="m-8"></div>
-
     <Panel id="eventos" title={'Eventos'} icon={<FontAwesomeIcon icon={faCalendar} />}>
       <Events events={eventsByDate} dateEvent={dateEvent} callbackDateChange={updateDateEvent} />
     </Panel>
+
+    <div className="m-8"></div>
 
     <Panel right id="atividade" title={'Atividade Parlamentar'} icon={<FontAwesomeIcon icon={faBookOpen} />}>
       <DeputadoActivity id={id} />

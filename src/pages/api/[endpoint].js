@@ -1,6 +1,6 @@
 const redis = require('redis');
 const querystring = require('querystring');
-const cacheServer = require('../../infra/cache');
+
 
 const CAMARA_DEPUTADOS_ENDPOINT = 'https://dadosabertos.camara.leg.br/api/v2/';
 
@@ -13,6 +13,7 @@ const isEndpointAvailable = (endpoint) => {
 }
 
 export default async function handler(req, res) {
+  const cacheServer = require('../../infra/cache');
   const { query } = req;
 
   if (!isEndpointAvailable(query.endpoint)) {

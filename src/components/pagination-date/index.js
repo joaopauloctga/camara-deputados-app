@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleChevronDown, faCircleChevronUp } from "@fortawesome/free-solid-svg-icons";
+import { faCircleChevronDown, faCircleChevronUp, faCircleChevronRight, faCircleChevronLeft } from "@fortawesome/free-solid-svg-icons";
 
 function DateItem({date, eventDate}) {
   const options = { weekday: 'short' };
   const dayOfWeek = date.toLocaleDateString('pt-BR', options);
-  return <div className={`text-center ${date.getDate() == eventDate.getDate() ? 'bg-4-inverse border rounded-sm border-color-1' : 'bg-4 rounded-sm'}`}>
+  return <div className={`text-center p-2 ${date.getDate() == eventDate.getDate() ? 'bg-4-inverse border rounded-sm border-color-1' : 'bg-4 rounded-sm'}`}>
     <h4>{date.getDate()}</h4>
     <h4>{dayOfWeek}</h4>
   </div>
@@ -45,18 +45,28 @@ function PaginationDate({startDate, numDates, setDate}) {
   
   return (
     <div className="text-center">
-      <ul>
-        <li className="p-1 t-primary t-icon-4 cursor-pointer" onClick={decreaseStartDate}><FontAwesomeIcon icon={faCircleChevronUp} /></li>
+      <ul className="flex flex-row flex-grow justify-center items-center md:flex-col">
+        <li className="p-1 t-primary t-icon-4 cursor-pointer hidden lg:block" onClick={decreaseStartDate}>
+          <FontAwesomeIcon className="hidden lg:show" icon={faCircleChevronUp} />
+        </li>
+        <li className="p-1 t-primary t-icon-4 cursor-pointer xs:block md:hidden" onClick={decreaseStartDate}>
+          <FontAwesomeIcon className="hidden md:show" icon={faCircleChevronLeft} />
+        </li>
         {dates.map((date) => (
           <li
             key={date.toISOString()}
             onClick={() => handleDateSelection(date)}
-            className={`p-1  cursor-pointer`}
+            className={`m-2 cursor-pointer`}
           >
             <DateItem date={date} eventDate={selectedDate} />
           </li>
         ))}
-        <li className="p-1 t-primary t-icon-4 cursor-pointer" onClick={increaseStartDate}><FontAwesomeIcon icon={faCircleChevronDown} /></li>
+        <li className="p-1 t-primary t-icon-4 cursor-pointer hidden lg:block" onClick={increaseStartDate}>
+          <FontAwesomeIcon icon={faCircleChevronDown} />
+        </li>
+        <li className="p-1 t-primary t-icon-4 cursor-pointer xs:block md:hidden" onClick={increaseStartDate}>
+          <FontAwesomeIcon icon={faCircleChevronRight} />
+        </li>
       </ul>
     </div>
   );

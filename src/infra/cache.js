@@ -13,8 +13,14 @@ export const setCache = (key, data) => {
 }
 
 const cache = () => {
-  const instance = cacheServerList[process.env.APPLICATION_CACHE_SERVICE];
-  return instance();
+  try {
+    const instance = cacheServerList[process.env.APPLICATION_CACHE_SERVICE];
+    return instance();
+  }
+  catch (e) {
+    console.log(`Failed to connect with cache server: ${e}`)
+    return null;
+  }
 }
 
 const cacheServerList = {
