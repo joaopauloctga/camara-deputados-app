@@ -1,6 +1,14 @@
 import { useEffect, useState } from 'react';
 
 function getPaginationLinks (links) {
+  if (!links) {
+    return {
+      nextPageLink: undefined,
+      previousPageLink: undefined,
+      lastPageLink: undefined,
+      firstPageLink: undefined
+    }
+  }
   let nextPageLink = links.find((link) => link.rel === 'next');
   let previousPageLink = links.find((link) => link.rel === 'previous');
   let lastPageLink = links.find((link) => link.rel === 'last');
@@ -14,6 +22,40 @@ function getPaginationLinks (links) {
   }
 }
 
+export const fetchAPI = async (url, subRequest) => {
+  const urlResult = await fetch(url);
+  let {dados, links} = await urlResult.json();
+  const data = dados;
+  
+  if (subRequest != undefined) {
+    let item, subData = null;
+    for (let i=0; i<3; i++) {
+      item = dados[i];
+      subData = await fetch(item.uri).then(resp => resp.json())
+      data.push({
+        ...result,
+        ...subData.dados
+      })
+    }
+    links = subData?.links
+  }
+
+  return {
+    ...getPaginationLinks(links),
+    data: data
+  }
+}
+
+const extractTotalItemsFromLink = (link) => {
+  const params = new URLSearchParams(link)
+  const pagina = params.get('pagina');
+  const itens = params.get('itens');
+  if (pagina == null || itens == null) {
+    return null;
+  }
+  return parseInt(pagina) * parseInt(params.get('itens'));
+}
+
 function useCamaraAPI({url, subRequest, config}) {
   const [result, setResult] = useState([]);
   const [isLoading, updateLoadingStatus] = useState(true);
@@ -21,37 +63,36 @@ function useCamaraAPI({url, subRequest, config}) {
   const [previousPage, setPreviousPage] = useState(null);
   const [lastPage, setLastPage] = useState(null);
   const [firstPage, setFirstPage] = useState(null);
+  const [totalItems, setTotalItems] = useState(null);
 
   const fetchData = async (url) => {
     updateLoadingStatus(true);
     const urlResult = await fetch(url);
     let {dados, links} = await urlResult.json();
-    const data = dados;
-    
-    if (subRequest) {
+    let data = dados;
+    if (subRequest !== undefined) {
       let item, subData = null;
-      for (let i=0; i<3; i++) {
+      for (let i=0; i<dados.length; i++) {
         item = dados[i];
         subData = await fetch(item.uri).then(resp => resp.json())
-        data.push({
-          ...result,
+        data[i] = {
+          ...item,
           ...subData.dados
-        })
+        }
       }
-      links = subData?.links
     }
-    
+
     const {
       nextPageLink,
       previousPageLink,
       lastPageLink,
       firstPageLink
     } = getPaginationLinks(links);
-    
     setFirstPage(firstPageLink?.href || null);
     setLastPage(lastPageLink?.href || null);
     setNextPage(nextPageLink?.href || null);
     setPreviousPage(previousPageLink?.href || null);
+    setTotalItems(extractTotalItemsFromLink(lastPageLink?.href || null));
     updateLoadingStatus(false)
     setResult((prevItems) => {
       if (config?.loadMore) {
@@ -70,7 +111,7 @@ function useCamaraAPI({url, subRequest, config}) {
     fetchData(url)
   }
 
-  return { isLoading, result, nextPage, previousPage, lastPage, firstPage, handleRequest }
+  return { isLoading, result, nextPage, previousPage, lastPage, firstPage, totalItems, handleRequest }
 }
 
 export default useCamaraAPI;

@@ -59,19 +59,7 @@ function DeputadoPage() {
     {id !== undefined && <DeputadoProfile id={id} />}
 
     <Panel id="proposicoes" title={'Proposições'} icon={<FontAwesomeIcon icon={faBookOpen} />}>
-      <div className="flex flex-wrap">
-        <div className="w-full lg:w-1/5">
-          <div className="flex flex-col justify-evenly h-full">
-            <InfoCardRounded title={'Projetos de sua autoria'} value='20' color={'bg-blue-500'} />
-            <InfoCardRounded title={'Aprovadas'} value='6' color={'bg-blue-500'} />
-          </div>
-        </div>
-        <div className="w-full lg:w-4/5">
-          <div className="flex flex-col rounded-sm border-1 border-solid p-2">
-            {id !== undefined && <DeputadoProposicoes deputadoId={id} />}
-          </div>
-        </div>
-      </div>
+      {id !== undefined && <DeputadoProposicoes deputadoId={id} />}
     </Panel>
 
     <div className="m-8"></div>
@@ -100,7 +88,7 @@ function DeputadoPage() {
     </Panel>
 
     <div className="m-8"></div>
-
+    
     <Panel right id="atividade" title={'Atividade Parlamentar'} icon={<FontAwesomeIcon icon={faBookOpen} />}>
       <DeputadoActivity id={id} />
     </Panel>

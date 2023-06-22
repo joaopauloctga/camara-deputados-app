@@ -46,10 +46,10 @@ function PaginationDate({startDate, numDates, setDate}) {
   return (
     <div className="text-center">
       <ul className="flex flex-row flex-grow justify-center items-center md:flex-col">
-        <li className="p-1 t-primary t-icon-4 cursor-pointer hidden lg:block" onClick={decreaseStartDate}>
-          <FontAwesomeIcon className="hidden lg:show" icon={faCircleChevronUp} />
+        <li className="p-1 t-primary t-icon-4 cursor-pointer hidden lg:flex" onClick={decreaseStartDate}>
+          <FontAwesomeIcon className="hidden lg:flex" icon={faCircleChevronUp} />
         </li>
-        <li className="p-1 t-primary t-icon-4 cursor-pointer xs:block md:hidden" onClick={decreaseStartDate}>
+        <li className="p-1 t-primary t-icon-4 cursor-pointer xs:flex md:hidden" onClick={decreaseStartDate}>
           <FontAwesomeIcon className="hidden md:show" icon={faCircleChevronLeft} />
         </li>
         {dates.map((date) => (
@@ -61,10 +61,10 @@ function PaginationDate({startDate, numDates, setDate}) {
             <DateItem date={date} eventDate={selectedDate} />
           </li>
         ))}
-        <li className="p-1 t-primary t-icon-4 cursor-pointer hidden lg:block" onClick={increaseStartDate}>
+        <li className="p-1 t-primary t-icon-4 cursor-pointer hidden lg:flex" onClick={increaseStartDate}>
           <FontAwesomeIcon icon={faCircleChevronDown} />
         </li>
-        <li className="p-1 t-primary t-icon-4 cursor-pointer xs:block md:hidden" onClick={increaseStartDate}>
+        <li className="p-1 t-primary t-icon-4 cursor-pointer xs:flex md:hidden" onClick={increaseStartDate}>
           <FontAwesomeIcon icon={faCircleChevronRight} />
         </li>
       </ul>

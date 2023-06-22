@@ -1,26 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import InfoCarList from '../apresentations/info-card-list';
+import InfoCardRounded from '../apresentations/info-card-rounded';
 import Link from 'next/link';
 import useCamaraAPI from '@/hooks/useCamaraAPI';
+import LoadingAPI from '../loading';
 
-function PropositionItem({date, sigla, text}) {
+function PropositionItem({deputadoId, id, descricaoTipo, dataApresentacao, ementa, statusProposicao}) {
   return (
-    <div className="flex flex-wrap xs:flex-col lg:items-center mb-4">
-      <div className="w-full lg:w-1/12 text-left lg:text-center">
-        <h6>{sigla}</h6>
-        <p>{date}</p>
-      </div>
-      <div className="w-full lg:w-11/12"><InfoCarList text={text} /></div>
-    </div>
+    <Link href={`/deputados/${deputadoId}/proposicoes/${id}`}>
+      <h6 className='text-md t-primary'>{descricaoTipo} publicado em {dataApresentacao}</h6>
+      <p className='bg-white p-2 rounded-sm border border-color-1'>{ementa}</p>
+      <h6 className='text-sm'>Último status: {statusProposicao.dataHora} - {statusProposicao.descricaoSituacao || 'sem descrição'}</h6>
+    </Link>
   )
 }
 
 const DeputadoProposicoes = ({ deputadoId }) => {
+  // @todo update to get this temas by API.
   const codTemas = Array.from({ length: 53 }, (_, index) => 34 + index);
   const url = `proposicoes?ordenarPor=ano&ordem=desc&idDeputadoAutor=${deputadoId}&itens=5&codTema=${codTemas.join(',')}`;
   const [proposicoes, setProposicoes] = useState([]);
-  const {isLoading, result, handleRequest } = useCamaraAPI({
-    url
+  const {isLoading, result, totalItems} = useCamaraAPI({
+    url,
+    subRequest: true
   });
 
   useEffect(() => {
@@ -30,14 +31,24 @@ const DeputadoProposicoes = ({ deputadoId }) => {
   }, [isLoading]);
 
   return (
-    <div>
-      <ul>
-        {proposicoes.map((p) => (
-          <PropositionItem key={p.id} sigla={`${p.numero} - ${p.siglaTipo}`} text={p.ementa} date={p.ano} />
-        ))}
-      </ul>
-      <div className='text-center'>
-        <Link href={`/deputados/${deputadoId}/proposicoes`}>Ver todos</Link>
+    <div className="flex flex-wrap px-6 py-2">
+      <div className="w-full lg:w-1/6">
+        <div className="flex flex-col justify-evenly h-full">
+          <InfoCardRounded isLoading={isLoading} title={'Projetos de sua autoria'} value={totalItems}  color={'bg-blue-500'} />
+          <InfoCardRounded isLoading={isLoading} title={'Aprovadas'} value='6' color={'bg-blue-500'} />
+        </div>
+      </div>
+      <div className="w-full lg:w-5/6">
+        {isLoading ? <LoadingAPI /> : <>
+          <ul>
+            {proposicoes.map((p) => (
+              <li className='mb-4' key={p.id}><PropositionItem deputadoId={deputadoId} key={p.id} {...p} /></li>
+            ))}
+          </ul>
+          <div className='text-center'>
+            <Link href={`/deputados/${deputadoId}/proposicoes`}>Ver todos</Link>
+          </div>
+        </>}
       </div>
     </div>
   );
