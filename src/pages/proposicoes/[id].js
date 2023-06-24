@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import useCamaraAPI from "@/hooks/useCamaraAPI";
+import useCamaraAPI, { fetchAPI } from "@/hooks/useCamaraAPI";
 import LoadingAPI from "@/components/loading";
 import Panel from "@/components/panel/panel";
 import ProfilePhoto from "@/components/deputado/ProfilePhoto";
@@ -161,20 +161,51 @@ function ProposicaoTramitacoes({id}) {
   </div>
 }
 
-function ProposicaoVotacoes({id}) {
-  const votacoes = useCamaraAPI({url: `proposicoes/${id}/votacoes`, config: {proxy: true}});
-  if (votacoes.isLoading) {
+function VotacaoDetail({votacao, id}) {
+  // console.log(votacao)
+  const [detail, setDetail] = useState(null);
+  useEffect(() => {
+    fetchAPI(votacao?.uri ?? `votacao/${id}`)
+      .then(({data}) => {
+        setDetail(data);
+      });
+  }, [votacao, id]);
+
+
+  if (detail === null) {
     return <LoadingAPI />
   }
 
-  return <div className="flex flex-wrap">
+  return <>
+    {/* {JSON.stringify(detail)} */}
+  </>
+  
+}
+
+function ProposicaoVotacoes({id}) {
+  const [votacao, setVotacao] = useState(null);
+  const [votacaoInfo, setVotacaoInfo] = useState(null);
+  const [votacaoCache, setVotacaoCache] = useState([]);
+  const {isLoading, result} = useCamaraAPI({url: `proposicoes/${id}/votacoes`, config: {proxy: true}});
+
+  useEffect(() => {
+    if (!isLoading && votacao === null) {
+      setVotacao(result[0])
+    }
+  }, [isLoading]);
+
+  if (isLoading || votacao == null) {
+    return <LoadingAPI />
+  }
+
+  return <div className="flex flex-wrap p-4">
     <ul className="w-1/6">
-      {votacoes.result.map((vot) => {
+      {result.map((vot) => {
         const statusVot = 
           vot.aprovacao === 1
           ? <h5><FontAwesomeIcon className="success" icon={faThumbsUp} /> Aprovada</h5>
           : <h5><FontAwesomeIcon className="danger" icon={faBan} /> Reprovada</h5>
-        return <li className="p-1 rounded-sm text-sm t-primary border border-color-1 mb-2">
+        return <li onClick={() => setVotacao(vot)} key={`votacao-id-${vot.id}`} className="p-1 rounded-sm text-sm t-primary border border-color-1 mb-2">
           <h5><FontAwesomeIcon icon={faCalendar} /> {vot.data}</h5>
           <h5><FontAwesomeIcon icon={faClock} /> {vot.dataHoraRegistro.slice(11, 22)}</h5>
           <h5><FontAwesomeIcon icon={faHouse} /> {vot.siglaOrgao}</h5>
@@ -182,6 +213,9 @@ function ProposicaoVotacoes({id}) {
         </li>
       })}
     </ul>
+    <div className="w-5/6">
+      <VotacaoDetail votacao={votacao} />
+    </div>
   </div>
 }
 
