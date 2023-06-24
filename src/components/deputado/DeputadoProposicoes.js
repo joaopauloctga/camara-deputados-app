@@ -6,7 +6,7 @@ import LoadingAPI from '../loading';
 
 function PropositionItem({deputadoId, id, descricaoTipo, dataApresentacao, ementa, statusProposicao}) {
   return (
-    <Link href={`/deputados/${deputadoId}/proposicoes/${id}`}>
+    <Link href={`/proposicoes/${id}`}>
       <h6 className='text-md t-primary'>{descricaoTipo} publicado em {dataApresentacao}</h6>
       <p className='bg-white p-2 rounded-sm border border-color-1'>{ementa}</p>
       <h6 className='text-sm'>Último status: {statusProposicao.dataHora} - {statusProposicao.descricaoSituacao || 'sem descrição'}</h6>
@@ -21,7 +21,10 @@ const DeputadoProposicoes = ({ deputadoId }) => {
   const [proposicoes, setProposicoes] = useState([]);
   const {isLoading, result, totalItems} = useCamaraAPI({
     url,
-    subRequest: true
+    subRequest: true,
+    config: {
+      subReqProxy: true
+    }
   });
 
   useEffect(() => {

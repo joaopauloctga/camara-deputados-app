@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useRouter } from 'next/router';
 import Panel from "@/components/panel/panel";
-import InfoCardRounded from "@/components/apresentations/info-card-rounded";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookOpen, faChartPie, faCalendar, faHandPointer } from "@fortawesome/free-solid-svg-icons";
 import CamaraPie from "@/components/charts/camara-pie";
@@ -15,15 +13,28 @@ import DeputadoCurriculo from "@/components/deputado/DeputadoCurriculo";
 import DeputadoProfile from "@/components/deputado/DeputadoProfile";
 import DeputadoVotos from "@/components/deputado/DeputadoVotos";
 
-function DeputadoPage() {
-  const router = useRouter();
-  const { id } = router.query;
+export const getServerSideProps = async ({query}) => {
+  const {id} = query;
+  const data = await (await fetch(`https://dadosabertos.camara.leg.br/api/v2/deputados/${id}`)).json();
+  return {
+    props: {
+      deputado: {
+        ...data.dados,
+        ...data.dados.ultimoStatus
+      }
+    }
+  }
+}
+
+function DeputadoPage({deputado}) {
+  const id = deputado.id
   const { expenses, loading } = deputadoExpenses(id);
   const [expenseByMonth, updateTotalExpenseByMonth] = useState(0);
   const [expenseByType, updateExpenseByType] = useState(0);
   const [dateEvent, updateDateEvent] = useState(new Date());
   const [eventsByDate, setEventsByDate] = useState([]);
   
+  // Expenses.
   useEffect(() => {
     if (!loading) {
       updateTotalExpenseByMonth(expenses.reduce((result, expense) => {
@@ -40,6 +51,7 @@ function DeputadoPage() {
     }
   }, [loading]);
 
+  // Events
   useEffect(() => {
     if (id == undefined) {
       return;
@@ -56,10 +68,10 @@ function DeputadoPage() {
 
   return <>
     
-    {id !== undefined && <DeputadoProfile id={id} />}
+    {id !== undefined && <DeputadoProfile deputado={deputado} />}
 
     <Panel id="proposicoes" title={'Proposições'} icon={<FontAwesomeIcon icon={faBookOpen} />}>
-      {id !== undefined && <DeputadoProposicoes deputadoId={id} />}
+      <DeputadoProposicoes deputadoId={id} />
     </Panel>
 
     <div className="m-8"></div>

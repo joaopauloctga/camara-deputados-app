@@ -40,7 +40,7 @@ const DeputadoFilterListPage = ({onChange, handleSearchName, partidosPreChecked,
       filter.itens = 12;
     }
     onChange(filter);
-  }, [legSelected, partidosChecked])
+  }, [legSelected, partidosChecked]);
 
   return <>
     {!legislaturas.isLoading && (<div className='mb-4 border rounded-md border-colo-1 p-2 mr-4'>
@@ -82,7 +82,8 @@ const DeputadosList = () => {
   const { isLoading, result, nextPage, handleRequest } = useCamaraAPI({
     url: 'deputados?itens=12',
     config: {
-      loadMore: true
+      loadMore: true,
+      proxy: true
     }
   });
 

@@ -1,26 +1,9 @@
 import React, { useEffect, useState } from "react";
-import LoadingAPI from "../loading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendar, faBuildingUser, faAt, faGraduationCap, faPeopleGroup, faChartPie, faBookOpen, faHandPointer } from "@fortawesome/free-solid-svg-icons";
 import ProfilePhoto from "./ProfilePhoto";
-import useCamaraAPI from "@/hooks/useCamaraAPI";
 
-function DeputadoProfile({id}) {
-  const [deputado, setDeputado] = useState(null);
-  const {isLoading, result} = useCamaraAPI({
-    url: `deputados/${id}`
-  })
-
-  useEffect(() => {
-    if (!isLoading) {
-      setDeputado({...result, ...result.ultimoStatus})
-    }    
-  }, [isLoading]);
-
-
-  if (isLoading || deputado == null) {
-    return <LoadingAPI />
-  }
+function DeputadoProfile({deputado}) {
 
   return <div className="flex flex-wrap m-4">
     <div className="w-full lg:w-1/2">

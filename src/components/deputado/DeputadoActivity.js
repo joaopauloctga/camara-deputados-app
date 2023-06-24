@@ -30,7 +30,7 @@ function DeputadoFrentes({id}) {
       <input className="flex-auto w-full lg:w-2/3 form-input mx-8 rounded-md" onChange={(e) => updateSearch(e.currentTarget.value)} placeholder="Pequisar por frente" />
       <div style={{maxHeight: '500px', overflow: 'auto'}} className="rounded-lg bg-white grid grid-gap-4 grid-cols-1 lg:grid-cols-2 auto-rows-auto">
         {frentes.map(frente => {
-          return <div key={frente.id} className="p-2">
+          return <div key={`frente-id-${frente.id}`} className="p-2">
             <InfoCarList 
               text={frente.titulo} />
           </div>
@@ -59,7 +59,7 @@ function DeputadoOrgaos({id}) {
   
   return <div className="rounded-lg bg-white grid grid-gap-4 grid-cols-1 lg:grid-cols-2 auto-rows-auto">
     {orgaos.map((orgao) => {
-      return <div key={orgao.idOrgao} className="p-2">
+      return <div key={`orgao-id-${orgao.idOrgao}`} className="p-2">
         <InfoCarList 
           text={orgao.nomeOrgao}
           smTitle={`${orgao.titulo}`}
