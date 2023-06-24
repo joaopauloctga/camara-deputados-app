@@ -5,8 +5,12 @@ import Panel from "@/components/panel/panel";
 import ProfilePhoto from "@/components/deputado/ProfilePhoto";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMars, faVenus, faPeopleGroup } from "@fortawesome/free-solid-svg-icons";
+import { faMars, faVenus, faPeopleGroup, faClockRotateLeft, faHandshake, faCheckToSlot, faCalendar, faClock, faHouse, faThumbsUp, faBan } from "@fortawesome/free-solid-svg-icons";
 import CamaraDoughnut from "@/components/charts/camara-doughnut";
+import { VerticalTimeline, VerticalTimelineElement } from "react-vertical-timeline-component";
+import 'react-vertical-timeline-component/style.min.css';
+import style from './proposicoes.module.scss'
+import InfoCarList from "@/components/apresentations/info-card-list";
 
 export const getServerSideProps = async ({query}) => {
   const resp = await fetch(`http://localhost:3000/api/camara/proposicoes/${query.id}`);
@@ -83,12 +87,12 @@ function ProposicaoAutores({id}) {
   autoresSummary = Object.fromEntries(array);
 
   return <div className="flex flex-wrap">
-    <div className="w-1/2 flex flex-wrap p-4 mb-1">
+    <div className="w-full lg:w-1/2 flex flex-col lg:flex-row flex-wrap p-4 mb-1">
       <h3 onClick={() => setFilterSexo(['F'])} className="t2 t-primary w-1/2"><FontAwesomeIcon icon={faVenus} /> Mulheres {result.filter(({sexo}) => sexo === 'F').length}</h3>
       <h3 onClick={() => setFilterSexo(['M'])} className="t2 t-primary w-1/2"><FontAwesomeIcon icon={faMars} /> Homens {result.filter(({sexo}) => sexo === 'M').length}</h3>
       <CamaraDoughnut labels={Object.keys(autoresSummary)} values={Object.values(autoresSummary)} height={400} width={`80%`} />
     </div>
-    <ul className="w-1/2 flex flex-wrap" style={{maxHeight: '500px', overflow: 'auto'}}>
+    <ul className="w-full lg:w-1/2 flex flex-wrap" style={{maxHeight: '500px', overflow: 'auto'}}>
       {autores.sort((a, b) => a.ordemAssinatura - b.ordemAssinatura).map(autor => {
         return <Link href={`/deputados/${autor.id}`} key={autor.id} className="w-1/2 lg:w-1/3">
           <ProfilePhoto foto={autor.ultimoStatus.urlFoto} alt={autor.nome} size="sm" />
@@ -99,10 +103,92 @@ function ProposicaoAutores({id}) {
   </div>
 }
 
+function ProposicaoRelationship({id}) {
+  const {
+    isLoading, result
+  } = useCamaraAPI({
+    url: `proposicoes/${id}/relacionadas`
+  });
+
+  if (isLoading) {
+    return <LoadingAPI />
+  }
+  else if (result.length === 0) {
+    return <div className="text-center w-full h-40 flex justify-center items-center">
+      <span className="t3 t-primary uppercase">Nenhum proposição relacionada</span>
+    </div>
+  }
+
+  return <div className="flex flex-col lg:flex-row flex-wrap p-4">
+    {result.map((p) => {
+      return <div key={`proposition-rel-${p.id}`} className="w-full lg:w-1/2 mb-2">
+        <Link href={`/proposicoes/${p.id}`}><InfoCarList text={p.ementa} smTitle={`${p.siglaTipo} - ${p.numero}`} /></Link>
+      </div>
+    })}
+  </div>
+}
+
+function ProposicaoTramitacoes({id}) {
+  const [showAll, setShowAll] = useState(false);
+  const {
+    isLoading, result
+  } = useCamaraAPI({
+    url: `proposicoes/${id}/tramitacoes`,
+    config: {
+      proxy: true
+    }
+  });
+
+  if (isLoading) {
+    return <LoadingAPI />
+  }
+
+  return <div className="flex flex-col">
+    <div>
+      <VerticalTimeline className={`${style.tramitacoes} ${showAll ? style.full : ''}`} animate={false}>
+        {result.reverse().map((t,index) => {
+          return <VerticalTimelineElement date={t.dataHora} key={`tramitacao-id-${index}`}>
+            <h3 className="vertical-timeline-element-title t5">{t.descricaoTramitacao}</h3>
+            <h4 className="vertical-timeline-element-subtitle text-sm t-black">{t.descricaoSituacao}</h4>
+            <p style={{fontSize: '14px'}}>{t.despacho}</p>
+          </VerticalTimelineElement>
+        })}
+      </VerticalTimeline>
+      <div className={`${style.limit} ${showAll ? 'hidden' : ''}`}>
+        <button onClick={() => setShowAll(true)}>Ver todas tramitações</button>
+      </div>
+    </div>    
+  </div>
+}
+
+function ProposicaoVotacoes({id}) {
+  const votacoes = useCamaraAPI({url: `proposicoes/${id}/votacoes`, config: {proxy: true}});
+  if (votacoes.isLoading) {
+    return <LoadingAPI />
+  }
+
+  return <div className="flex flex-wrap">
+    <ul className="w-1/6">
+      {votacoes.result.map((vot) => {
+        const statusVot = 
+          vot.aprovacao === 1
+          ? <h5><FontAwesomeIcon className="success" icon={faThumbsUp} /> Aprovada</h5>
+          : <h5><FontAwesomeIcon className="danger" icon={faBan} /> Reprovada</h5>
+        return <li className="p-1 rounded-sm text-sm t-primary border border-color-1 mb-2">
+          <h5><FontAwesomeIcon icon={faCalendar} /> {vot.data}</h5>
+          <h5><FontAwesomeIcon icon={faClock} /> {vot.dataHoraRegistro.slice(11, 22)}</h5>
+          <h5><FontAwesomeIcon icon={faHouse} /> {vot.siglaOrgao}</h5>
+          {statusVot}
+        </li>
+      })}
+    </ul>
+  </div>
+}
+
 function ProposicaoPage(p) {
   return <>
-    <div className="flex flex-wrap mb-4">
-      <div className="w-2/5 flex flex-col border p-2">
+    <div className="flex flex-wrap mb-4 p-2">
+      <div className="w-full lg:w-2/5 flex flex-col border p-4 mb-4">
         <span className="t5 t-primary border-b py-1">{p.siglaTipo} - {p.descricaoTipo}</span>
         <span className="t5 t-primary border-b py-1">Apresentada em - {p.dataApresentacao}</span>
         <span className="t5 t-primary border-b py-1">Últ. Atualização - {p.statusProposicao.dataHora}</span>
@@ -113,7 +199,7 @@ function ProposicaoPage(p) {
         <h3 className="t5 t-primary border-b py-1">Palavras chaves</h3>
         <p className="text-sm">{p.keywords}</p>
       </div>
-      <div className="w-3/5 px-4 flex flex-col justify-between">
+      <div className="w-full lg:w-3/5 px-4 flex flex-col justify-between mb-4">
         <div>
           <h3 className="t3 t-primary">Ementa do texto</h3>
           <p>{p.ementa}</p>
@@ -129,6 +215,18 @@ function ProposicaoPage(p) {
     </div>
     <Panel title="Autores" icon={<FontAwesomeIcon icon={faPeopleGroup} />}>
       <ProposicaoAutores id={p.id} />
+    </Panel>
+    <div className="mb-4"></div>
+    <Panel right title="Tramitação" icon={<FontAwesomeIcon icon={faClockRotateLeft} />}>
+      <ProposicaoTramitacoes id={p.id} />
+    </Panel>
+    <div className="mb-4"></div>
+    <Panel title="Votações" icon={<FontAwesomeIcon icon={faCheckToSlot} />}>
+      <ProposicaoVotacoes id={p.id} />
+    </Panel>
+    <div className="mb-4"></div>
+    <Panel right title="Proposições Relacionadas" icon={<FontAwesomeIcon icon={faHandshake} />}>
+      <ProposicaoRelationship id={p.id} />
     </Panel>
   </>
 }
