@@ -89,7 +89,11 @@ function useCamaraAPI({url, subRequest, config}) {
       let item, subData = null;
       for (let i=0; i<dados.length; i++) {
         item = dados[i];
-        subData = await fetchProxy(item.uri, {proxy: config?.subReqProxy !== undefined})
+        let uri = item.deputado_ !== undefined
+          ? item.deputado_.uri
+          : item.uri;
+
+        subData = await fetchProxy(uri, {proxy: config?.subReqProxy !== undefined})
         data[i] = {
           ...item,
           ...subData.dados

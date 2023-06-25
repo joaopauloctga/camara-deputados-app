@@ -5,12 +5,13 @@ import Panel from "@/components/panel/panel";
 import ProfilePhoto from "@/components/deputado/ProfilePhoto";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMars, faVenus, faPeopleGroup, faClockRotateLeft, faHandshake, faCheckToSlot, faCalendar, faClock, faHouse, faThumbsUp, faBan } from "@fortawesome/free-solid-svg-icons";
+import { faMars, faVenus, faPeopleGroup, faClockRotateLeft, faHandshake, faCheckToSlot, faCalendar, faClock, faHouse, faThumbsUp, faBan, faHands, faB } from "@fortawesome/free-solid-svg-icons";
 import CamaraDoughnut from "@/components/charts/camara-doughnut";
 import { VerticalTimeline, VerticalTimelineElement } from "react-vertical-timeline-component";
 import 'react-vertical-timeline-component/style.min.css';
 import style from './proposicoes.module.scss'
 import InfoCarList from "@/components/apresentations/info-card-list";
+import { reduceToObject } from "@/utils/common";
 
 export const getServerSideProps = async ({query}) => {
   const resp = await fetch(`http://localhost:3000/api/camara/proposicoes/${query.id}`);
@@ -77,7 +78,7 @@ function ProposicaoAutores({id}) {
     return grupo
   }, {});
 
-  if (filterPartidos.length ==0) {
+  if (filterPartidos.length === 0) {
     setFilterPartidos(Object.keys(autoresSummary));
   }  
 
@@ -162,31 +163,148 @@ function ProposicaoTramitacoes({id}) {
 }
 
 function VotacaoDetail({votacao, id}) {
-  // console.log(votacao)
+  const [isLoading, setIsLoading] = useState(true);
   const [detail, setDetail] = useState(null);
   useEffect(() => {
     fetchAPI(votacao?.uri ?? `votacao/${id}`)
       .then(({data}) => {
+        setIsLoading(false)
         setDetail(data);
       });
   }, [votacao, id]);
 
-
-  if (detail === null) {
+  if (isLoading) {
     return <LoadingAPI />
   }
 
-  return <>
-    {/* {JSON.stringify(detail)} */}
-  </>
+  return <div className="lg:px-4">
+    <h3 className="t4 t-primary">Resumo</h3>
+    <p className="p-2 bg-white rounded-sm border border-color-1">{detail.descricao}</p>
+    <h3 className="t6 t-primary">Último status: {detail.siglaOrgao} - {detail.ultimaApresentacaoProposicao.dataHoraRegistro}</h3>
+    <p className="p-2 bg-white rounded-sm border border-color-1">
+      {detail.descUltimaAberturaVotacao} {detail.ultimaApresentacaoProposicao.descricao}
+    </p>
+    <hr className="m-2" />
+    {detail.siglaOrgao === 'CCJC' && <ProposicaoVotos votacao={votacao} />}
+  </div>
   
+}
+
+function ProposicaoVotos({votacao, id}) {
+  const [votesYes, setVotesYes] = useState([]);
+  const [votesNo, setVotesNo] = useState([]);
+
+  const {isLoading, result} = useCamaraAPI({
+    url: `votacoes/${votacao?.id ?? id}/votos`,
+    subRequest: true,
+    config: {
+      subReqProxy: true
+    }
+  });
+
+  useEffect(() => {
+    if (!isLoading) {
+      const yes = [];
+      const no = [];
+      let porPartido = {};
+      result.forEach((vot) => {
+        // console.log(vot)
+        if (vot.tipoVoto === "Sim") {
+          yes.push({...vot, ...vot.deputado_})
+        }
+        else {
+          no.push({...vot, ...vot.deputado_})
+        }
+      })
+      setVotesNo(no)
+      setVotesYes(yes)
+    }
+  }, [isLoading]);
+
+  if (isLoading) {
+    return <LoadingAPI />
+  }
+
+  return <div className="flex flex-col">
+    <div className="w-full flex flex-wrap">
+      <div className="w-full lg:w-1/2">
+        {votesYes.length > 0 && 
+          <CamaraDoughnut 
+            title="A favor por partido"
+            width={'80%'} 
+            height={'400px'} 
+            labels={Object.keys(reduceToObject(votesYes, 'siglaPartido'))} 
+            values={Object.values(reduceToObject(votesYes, 'siglaPartido'))} 
+            />
+        }
+      </div>
+      <div className="w-full lg:w-1/2">
+        {votesNo.length > 0 &&
+          <CamaraDoughnut 
+            title="Votos contra por partido"
+            width={'80%'} 
+            height={'400px'} 
+            labels={Object.keys(reduceToObject(votesNo, 'siglaPartido'))} 
+            values={Object.values(reduceToObject(votesNo, 'siglaPartido'))} 
+            />
+        }
+      </div>
+    </div>
+    <div className="w-full  p-2">
+      <h3 className="t4 t-primary text-center mb-2"><FontAwesomeIcon className="success" icon={faThumbsUp} /> Votaram a favor {!isLoading && `(${votesYes.length})`}</h3>
+      <ul className="flex overflow-x-auto">
+        {votesYes.map(d => <li key={d.id} className="mr-2 w-full">
+          <ProfilePhoto name={d.nome} size="xs" foto={d.urlFoto} /></li>)}
+      </ul>
+    </div>
+    <div className="w-full  p-2">
+      <h3 className="t4 t-primary text-center mb-2"><FontAwesomeIcon className="danger" icon={faBan} /> Votaram contra {!isLoading && `(${votesNo.length})`}</h3>
+      <ul className="flex overflow-x-auto">
+        {votesNo.map(d => <li key={d.id} className="mr-2 w-full">
+          <ProfilePhoto name={d.nome}  size="xs" foto={d.urlFoto} /></li>)}
+      </ul>
+    </div>
+    <div className="flex flex-wrap">
+      <div className="w-full lg:w-1/3">
+        <CamaraDoughnut 
+          title="Proporção sexo"
+          width={'80%'} 
+          height={'200px'} 
+          labels={Object.keys(reduceToObject(result, 'sexo'))} 
+          values={Object.values(reduceToObject(result, 'sexo'))} 
+          />
+      </div>
+      <div className="w-full lg:w-1/3">
+        {votesNo.length > 0 &&
+          <CamaraDoughnut 
+            title="Proporção sexo"
+            width={'80%'} 
+            height={'200px'} 
+            labels={Object.keys(reduceToObject(result, 'sexo'))} 
+            values={Object.values(reduceToObject(result, 'sexo'))} 
+            />
+        }
+      </div>
+      <div className="w-full lg:w-1/3">
+        {votesNo.length > 0 &&
+          <CamaraDoughnut 
+            title="Proporção sexo"
+            width={'80%'} 
+            height={'200px'} 
+            labels={Object.keys(reduceToObject(result, 'sexo'))} 
+            values={Object.values(reduceToObject(result, 'sexo'))} 
+            />
+        }
+      </div>
+    </div>
+  </div>
 }
 
 function ProposicaoVotacoes({id}) {
   const [votacao, setVotacao] = useState(null);
   const [votacaoInfo, setVotacaoInfo] = useState(null);
   const [votacaoCache, setVotacaoCache] = useState([]);
-  const {isLoading, result} = useCamaraAPI({url: `proposicoes/${id}/votacoes`, config: {proxy: true}});
+  const {isLoading, result} = useCamaraAPI({url: `proposicoes/${id}/votacoes`, config: {proxy: false}});
 
   useEffect(() => {
     if (!isLoading && votacao === null) {
@@ -198,14 +316,14 @@ function ProposicaoVotacoes({id}) {
     return <LoadingAPI />
   }
 
-  return <div className="flex flex-wrap p-4">
-    <ul className="w-1/6">
+  return <div className="flex flex-wrap pl-2">
+    <ul className="w-1/6 hidden lg:block">
       {result.map((vot) => {
         const statusVot = 
           vot.aprovacao === 1
           ? <h5><FontAwesomeIcon className="success" icon={faThumbsUp} /> Aprovada</h5>
           : <h5><FontAwesomeIcon className="danger" icon={faBan} /> Reprovada</h5>
-        return <li onClick={() => setVotacao(vot)} key={`votacao-id-${vot.id}`} className="p-1 rounded-sm text-sm t-primary border border-color-1 mb-2">
+        return <li onClick={() => setVotacao(vot)} key={`votacao-id-${vot.id}`} className="p-1 cursor-pointer rounded-sm text-sm t-primary border border-color-1 mb-2">
           <h5><FontAwesomeIcon icon={faCalendar} /> {vot.data}</h5>
           <h5><FontAwesomeIcon icon={faClock} /> {vot.dataHoraRegistro.slice(11, 22)}</h5>
           <h5><FontAwesomeIcon icon={faHouse} /> {vot.siglaOrgao}</h5>
@@ -213,7 +331,14 @@ function ProposicaoVotacoes({id}) {
         </li>
       })}
     </ul>
-    <div className="w-5/6">
+    <select className="w-full lg:hidden" onChange={(e) => setVotacao(result[e.target.value])}>
+      {result.map((vot, index) => 
+        <option key={`votacao-id-${vot.id}`} value={index} className="p-1 cursor-pointer rounded-sm text-sm t-primary border border-color-1 mb-2">
+          {vot.aprovacao === 1 ? 'Aprovada' : 'Reprovada'} - {vot.data} - {vot.dataHoraRegistro.slice(11, 22)}
+        </option>
+      )}
+    </select>
+    <div className="w-full lg:w-5/6">
       <VotacaoDetail votacao={votacao} />
     </div>
   </div>

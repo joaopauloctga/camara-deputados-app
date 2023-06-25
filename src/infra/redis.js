@@ -18,5 +18,5 @@ export const getCache = async (key) => {
 
 export const setCache = (key, data) => {
   client.set(key, JSON.stringify(data));
-  client.quit();
+  // client.quit();
 }
