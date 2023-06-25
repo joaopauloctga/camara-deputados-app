@@ -6,7 +6,7 @@ import chroma from 'chroma-js';
 
 ChartJS.register(ArcElement, Tooltip, Legend, Title, ChartDataLabels);
 
-function CamaraDoughnut({height, width, labels, values, title}) {
+function CamaraDoughnut({height, width, labels, values, title, legendPosition = 'right'}) {
   const colors = chroma.scale('Set3').colors(labels.length);
   const data = {
     labels: labels,
@@ -28,7 +28,7 @@ function CamaraDoughnut({height, width, labels, values, title}) {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'right'
+        position: legendPosition
       },
       title: {
         display: true,

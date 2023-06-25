@@ -1,0 +1,28 @@
+.panelSeeMore {
+
+  overflow: hidden;
+  &.full {
+    max-height: none;
+    overflow: auto;
+  }
+
+.shadowContainer {
+  text-align: center;
+  background-image: linear-gradient(to top, rgb(82, 112, 190, 1), rgb(82, 112, 190, 0));
+  height: 100px;
+  position: relative;
+  padding: 20px 0;
+  top: -100px;
+  border-radius: 8px;
+}
+
+button {
+  text-transform: uppercase;
+  position: relative;
+  top: -150px;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+  
+}

@@ -12,6 +12,7 @@ import 'react-vertical-timeline-component/style.min.css';
 import style from './proposicoes.module.scss'
 import InfoCarList from "@/components/apresentations/info-card-list";
 import { reduceToObject } from "@/utils/common";
+import PanelSeeMore from "@/components/panel-see-more/panel-see-more";
 
 export const getServerSideProps = async ({query}) => {
   const resp = await fetch(`http://localhost:3000/api/camara/proposicoes/${query.id}`);
@@ -202,13 +203,15 @@ function ProposicaoVotos({votacao, id}) {
     }
   });
 
+  const orientacoes = useCamaraAPI({
+    url: `votacoes/${votacao.id ?? id}/orientacoes`
+  })
+
   useEffect(() => {
     if (!isLoading) {
       const yes = [];
       const no = [];
-      let porPartido = {};
       result.forEach((vot) => {
-        // console.log(vot)
         if (vot.tipoVoto === "Sim") {
           yes.push({...vot, ...vot.deputado_})
         }
@@ -225,9 +228,33 @@ function ProposicaoVotos({votacao, id}) {
     return <LoadingAPI />
   }
 
+  const groupVotesBySexo = (data) => {
+    const group = {
+      'Homens a favor': 0,
+      'Mulheres a favor': 0,
+      'Homens contra': 0,
+      'Mulheres contra': 0,
+    };
+    data.forEach((vot) => {
+      let key = `${vot.sexo === 'F' ? 'Mulheres' : 'Homens'}`;
+      key += ` ${vot.tipoVoto === 'Não' ? 'contra' : 'a favor'}`;
+      group[key]++;
+    });
+    return group;
+  }
+
   return <div className="flex flex-col">
-    <div className="w-full flex flex-wrap">
+    <div className="flex flex-wrap">
       <div className="w-full lg:w-1/2">
+        <h3 className="t4 t-primary text-center mb-2"><FontAwesomeIcon className="success" icon={faThumbsUp} /> Votaram a favor {!isLoading && `(${votesYes.length})`}</h3>
+        {/* <PanelSeeMore maxHeight={400}> */}
+          <ul className="flex flex-wrap  max-h-80 overflow-y-auto">
+            {votesYes.map(d => <li key={d.id} className="w-1/3">
+              <ProfilePhoto name={d.nome} size="xs" foto={d.urlFoto} /></li>)}
+          </ul>
+        {/* </PanelSeeMore> */}
+      </div>
+      <div className="w-full: lg:w-1/2">
         {votesYes.length > 0 && 
           <CamaraDoughnut 
             title="A favor por partido"
@@ -238,6 +265,9 @@ function ProposicaoVotos({votacao, id}) {
             />
         }
       </div>
+    </div>
+    <hr className="mb-2" />
+    <div className="flex flw-wrap">
       <div className="w-full lg:w-1/2">
         {votesNo.length > 0 &&
           <CamaraDoughnut 
@@ -249,27 +279,22 @@ function ProposicaoVotos({votacao, id}) {
             />
         }
       </div>
+      <div className="w-full lg:w-1/2">
+        <h3 className="t4 t-primary text-center mb-2"><FontAwesomeIcon className="danger" icon={faBan} /> Votaram contra {!isLoading && `(${votesNo.length})`}</h3>
+        <ul className="flex flex-wrap max-h-80 overflow-y-auto">
+          {votesNo.map(d => <li key={d.id} className="w-1/3">
+            <ProfilePhoto name={d.nome}  size="xs" foto={d.urlFoto} /></li>)}
+        </ul>
+      </div>
     </div>
-    <div className="w-full  p-2">
-      <h3 className="t4 t-primary text-center mb-2"><FontAwesomeIcon className="success" icon={faThumbsUp} /> Votaram a favor {!isLoading && `(${votesYes.length})`}</h3>
-      <ul className="flex overflow-x-auto">
-        {votesYes.map(d => <li key={d.id} className="mr-2 w-full">
-          <ProfilePhoto name={d.nome} size="xs" foto={d.urlFoto} /></li>)}
-      </ul>
-    </div>
-    <div className="w-full  p-2">
-      <h3 className="t4 t-primary text-center mb-2"><FontAwesomeIcon className="danger" icon={faBan} /> Votaram contra {!isLoading && `(${votesNo.length})`}</h3>
-      <ul className="flex overflow-x-auto">
-        {votesNo.map(d => <li key={d.id} className="mr-2 w-full">
-          <ProfilePhoto name={d.nome}  size="xs" foto={d.urlFoto} /></li>)}
-      </ul>
-    </div>
+    <hr className="mb-2" />
     <div className="flex flex-wrap">
       <div className="w-full lg:w-1/3">
         <CamaraDoughnut 
-          title="Proporção sexo"
+          title="Proporção Sexo"
           width={'80%'} 
           height={'200px'} 
+          legendPosition="top"
           labels={Object.keys(reduceToObject(result, 'sexo'))} 
           values={Object.values(reduceToObject(result, 'sexo'))} 
           />
@@ -277,23 +302,26 @@ function ProposicaoVotos({votacao, id}) {
       <div className="w-full lg:w-1/3">
         {votesNo.length > 0 &&
           <CamaraDoughnut 
-            title="Proporção sexo"
-            width={'80%'} 
+            title="Votos por sexo"
+            width={'100%'} 
             height={'200px'} 
-            labels={Object.keys(reduceToObject(result, 'sexo'))} 
-            values={Object.values(reduceToObject(result, 'sexo'))} 
+            legendPosition="top"
+            labels={Object.keys(groupVotesBySexo(result))} 
+            values={Object.values(groupVotesBySexo(result))} 
             />
         }
       </div>
       <div className="w-full lg:w-1/3">
-        {votesNo.length > 0 &&
-          <CamaraDoughnut 
-            title="Proporção sexo"
-            width={'80%'} 
-            height={'200px'} 
-            labels={Object.keys(reduceToObject(result, 'sexo'))} 
-            values={Object.values(reduceToObject(result, 'sexo'))} 
-            />
+        {orientacoes.isLoading
+          ? <LoadingAPI />
+          : <CamaraDoughnut 
+              title="Orientacao dos Partidos"
+              width={'80%'} 
+              height={'200px'} 
+              legendPosition="top"
+              labels={['A favor', 'Contra']} 
+              values={Object.values(reduceToObject(orientacoes.result, 'orientacaoVoto'))} 
+              />
         }
       </div>
     </div>
@@ -312,8 +340,13 @@ function ProposicaoVotacoes({id}) {
     }
   }, [isLoading]);
 
-  if (isLoading || votacao == null) {
+  if (isLoading) {
     return <LoadingAPI />
+  }
+  else if (result.length === 0) {
+    return <div className="text-center w-full h-40 flex justify-center items-center">
+      <span className="t3 t-primary uppercase">Proposição ainda não votada</span>
+    </div>
   }
 
   return <div className="flex flex-wrap pl-2">
