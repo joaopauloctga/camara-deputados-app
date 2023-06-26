@@ -58,10 +58,12 @@ const extractTotalItemsFromLink = (link) => {
 }
 
 const fetchProxy = async (url, config)  => {
-  const resp = await fetch(
-    config !== undefined && config.proxy ? buildInternalAPI(url) : url
-  );
-  return await resp.json();
+  const reqConfig = {};
+  let dataUrl = config !== undefined && config.proxy 
+    ? buildInternalAPI(url) 
+    : url;
+    const resp = await fetch(dataUrl, reqConfig);
+    return await resp.json();
 }
 
 export const buildInternalAPI = (url) => {
@@ -81,7 +83,7 @@ function useCamaraAPI({url, subRequest, config}) {
   const fetchData = async (url) => {
     updateLoadingStatus(true);
     let {dados, links} = await fetchProxy(url, {
-      proxy: config?.proxy !== undefined
+      proxy: config?.proxy !== undefined,
     });
     let data = dados;
     

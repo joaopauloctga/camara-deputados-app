@@ -122,8 +122,8 @@ function ProposicaoRelationship({id}) {
   }
 
   return <div className="flex flex-col lg:flex-row flex-wrap p-4">
-    {result.map((p) => {
-      return <div key={`proposition-rel-${p.id}`} className="w-full lg:w-1/2 mb-2">
+    {result.map((p, index) => {
+      return <div key={`proposition-rel-${index}`} className="w-full lg:w-1/2 mb-2">
         <Link href={`/proposicoes/${p.id}`}><InfoCarList text={p.ementa} smTitle={`${p.siglaTipo} - ${p.numero}`} /></Link>
       </div>
     })}
@@ -145,29 +145,24 @@ function ProposicaoTramitacoes({id}) {
     return <LoadingAPI />
   }
 
-  return <div className="flex flex-col">
-    <div>
-      <VerticalTimeline className={`${style.tramitacoes} ${showAll ? style.full : ''}`} animate={false}>
-        {result.reverse().map((t,index) => {
-          return <VerticalTimelineElement date={t.dataHora} key={`tramitacao-id-${index}`}>
-            <h3 className="vertical-timeline-element-title t5">{t.descricaoTramitacao}</h3>
-            <h4 className="vertical-timeline-element-subtitle text-sm t-black">{t.descricaoSituacao}</h4>
-            <p style={{fontSize: '14px'}}>{t.despacho}</p>
-          </VerticalTimelineElement>
-        })}
-      </VerticalTimeline>
-      <div className={`${style.limit} ${showAll ? 'hidden' : ''}`}>
-        <button onClick={() => setShowAll(true)}>Ver todas tramitações</button>
-      </div>
-    </div>    
-  </div>
+  return <PanelSeeMore theme="green" maxHeight={500}>
+    <VerticalTimeline animate={false}>
+      {result.reverse().map((t,index) => {
+        return <VerticalTimelineElement date={t.dataHora} key={`tramitacao-id-${index}`}>
+          <h3 className="vertical-timeline-element-title t5">{t.descricaoTramitacao}</h3>
+          <h4 className="vertical-timeline-element-subtitle text-sm t-black">{t.descricaoSituacao}</h4>
+          <p style={{fontSize: '14px'}}>{t.despacho}</p>
+        </VerticalTimelineElement>
+      })}
+    </VerticalTimeline>
+  </PanelSeeMore>
 }
 
 function VotacaoDetail({votacao, id}) {
   const [isLoading, setIsLoading] = useState(true);
   const [detail, setDetail] = useState(null);
   useEffect(() => {
-    fetchAPI(votacao?.uri ?? `votacao/${id}`)
+    fetchAPI(votacao?.uri !== undefined ? votacao?.uri : `votacao/${id}`)
       .then(({data}) => {
         setIsLoading(false)
         setDetail(data);
@@ -178,14 +173,14 @@ function VotacaoDetail({votacao, id}) {
     return <LoadingAPI />
   }
 
-  return <div className="lg:px-4">
+  return <div className="py-2">
     <h3 className="t4 t-primary">Resumo</h3>
-    <p className="p-2 bg-white rounded-sm border border-color-1">{detail.descricao}</p>
+    <p className="p-2 bg-white rounded-sm border border-color-1 mb-2">{detail.descricao}</p>
     <h3 className="t6 t-primary">Último status: {detail.siglaOrgao} - {detail.ultimaApresentacaoProposicao.dataHoraRegistro}</h3>
     <p className="p-2 bg-white rounded-sm border border-color-1">
       {detail.descUltimaAberturaVotacao} {detail.ultimaApresentacaoProposicao.descricao}
     </p>
-    <hr className="m-2" />
+    <hr className="m-4" />
     {detail.siglaOrgao === 'CCJC' && <ProposicaoVotos votacao={votacao} />}
   </div>
   
@@ -196,15 +191,17 @@ function ProposicaoVotos({votacao, id}) {
   const [votesNo, setVotesNo] = useState([]);
 
   const {isLoading, result} = useCamaraAPI({
-    url: `votacoes/${votacao?.id ?? id}/votos`,
+    url: `votacoes/${votacao.id}/votos`,
     subRequest: true,
     config: {
-      subReqProxy: true
+      proxy: true,
+      subReqProxy: true,
     }
   });
 
   const orientacoes = useCamaraAPI({
-    url: `votacoes/${votacao.id ?? id}/orientacoes`
+    url: `votacoes/${votacao.id}/orientacoes`,
+    config: {proxy: true}
   })
 
   useEffect(() => {
@@ -247,17 +244,18 @@ function ProposicaoVotos({votacao, id}) {
     <div className="flex flex-wrap">
       <div className="w-full lg:w-1/2">
         <h3 className="t4 t-primary text-center mb-2"><FontAwesomeIcon className="success" icon={faThumbsUp} /> Votaram a favor {!isLoading && `(${votesYes.length})`}</h3>
-        {/* <PanelSeeMore maxHeight={400}> */}
-          <ul className="flex flex-wrap  max-h-80 overflow-y-auto">
+        <PanelSeeMore maxHeight={350} theme="green">
+          <ul className="flex flex-wrap">
             {votesYes.map(d => <li key={d.id} className="w-1/3">
               <ProfilePhoto name={d.nome} size="xs" foto={d.urlFoto} /></li>)}
           </ul>
-        {/* </PanelSeeMore> */}
+        </PanelSeeMore>
       </div>
-      <div className="w-full: lg:w-1/2">
+      <div className="w-full lg:w-1/2">
         {votesYes.length > 0 && 
           <CamaraDoughnut 
             title="A favor por partido"
+            legendPosition="left"
             width={'80%'} 
             height={'400px'} 
             labels={Object.keys(reduceToObject(votesYes, 'siglaPartido'))} 
@@ -266,8 +264,8 @@ function ProposicaoVotos({votacao, id}) {
         }
       </div>
     </div>
-    <hr className="mb-2" />
-    <div className="flex flw-wrap">
+    <hr className="m-4" />
+    <div className="flex flex-wrap">
       <div className="w-full lg:w-1/2">
         {votesNo.length > 0 &&
           <CamaraDoughnut 
@@ -281,20 +279,21 @@ function ProposicaoVotos({votacao, id}) {
       </div>
       <div className="w-full lg:w-1/2">
         <h3 className="t4 t-primary text-center mb-2"><FontAwesomeIcon className="danger" icon={faBan} /> Votaram contra {!isLoading && `(${votesNo.length})`}</h3>
-        <ul className="flex flex-wrap max-h-80 overflow-y-auto">
-          {votesNo.map(d => <li key={d.id} className="w-1/3">
-            <ProfilePhoto name={d.nome}  size="xs" foto={d.urlFoto} /></li>)}
-        </ul>
+        <PanelSeeMore maxHeight={350} theme="green">
+          <ul className="flex flex-wrap">
+            {votesNo.map(d => <li key={d.id} className="w-1/3">
+              <ProfilePhoto name={d.nome}  size="xs" foto={d.urlFoto} /></li>)}
+          </ul>
+        </PanelSeeMore>
       </div>
     </div>
-    <hr className="mb-2" />
-    <div className="flex flex-wrap">
+    <hr className="m-4" />
+    <div className="flex flex-wrap p-4">
       <div className="w-full lg:w-1/3">
         <CamaraDoughnut 
           title="Proporção Sexo"
           width={'80%'} 
           height={'200px'} 
-          legendPosition="top"
           labels={Object.keys(reduceToObject(result, 'sexo'))} 
           values={Object.values(reduceToObject(result, 'sexo'))} 
           />
@@ -305,7 +304,6 @@ function ProposicaoVotos({votacao, id}) {
             title="Votos por sexo"
             width={'100%'} 
             height={'200px'} 
-            legendPosition="top"
             labels={Object.keys(groupVotesBySexo(result))} 
             values={Object.values(groupVotesBySexo(result))} 
             />
@@ -317,8 +315,7 @@ function ProposicaoVotos({votacao, id}) {
           : <CamaraDoughnut 
               title="Orientacao dos Partidos"
               width={'80%'} 
-              height={'200px'} 
-              legendPosition="top"
+              height={'200px'}
               labels={['A favor', 'Contra']} 
               values={Object.values(reduceToObject(orientacoes.result, 'orientacaoVoto'))} 
               />
@@ -330,9 +327,7 @@ function ProposicaoVotos({votacao, id}) {
 
 function ProposicaoVotacoes({id}) {
   const [votacao, setVotacao] = useState(null);
-  const [votacaoInfo, setVotacaoInfo] = useState(null);
-  const [votacaoCache, setVotacaoCache] = useState([]);
-  const {isLoading, result} = useCamaraAPI({url: `proposicoes/${id}/votacoes`, config: {proxy: false}});
+  const {isLoading, result} = useCamaraAPI({url: `proposicoes/${id}/votacoes`, config: {proxy: true}});
 
   useEffect(() => {
     if (!isLoading && votacao === null) {
@@ -349,14 +344,15 @@ function ProposicaoVotacoes({id}) {
     </div>
   }
 
-  return <div className="flex flex-wrap pl-2">
-    <ul className="w-1/6 hidden lg:block">
+  return <div className="flex flex-wrap px-4">
+    <ul className="w-full hidden lg:flex flex-wrap">
       {result.map((vot) => {
         const statusVot = 
           vot.aprovacao === 1
           ? <h5><FontAwesomeIcon className="success" icon={faThumbsUp} /> Aprovada</h5>
           : <h5><FontAwesomeIcon className="danger" icon={faBan} /> Reprovada</h5>
-        return <li onClick={() => setVotacao(vot)} key={`votacao-id-${vot.id}`} className="p-1 cursor-pointer rounded-sm text-sm t-primary border border-color-1 mb-2">
+        const active = vot.id === votacao?.id ? "bg-4-inverse" : ''
+        return <li onClick={() => setVotacao(vot)} key={`votacao-id-${vot.id}`} className={`mr-2 bg-4 text-white p-1 cursor-pointer w-1/12 rounded-sm border border-color-1 mb-2 ${active}`}>
           <h5><FontAwesomeIcon icon={faCalendar} /> {vot.data}</h5>
           <h5><FontAwesomeIcon icon={faClock} /> {vot.dataHoraRegistro.slice(11, 22)}</h5>
           <h5><FontAwesomeIcon icon={faHouse} /> {vot.siglaOrgao}</h5>
@@ -371,8 +367,8 @@ function ProposicaoVotacoes({id}) {
         </option>
       )}
     </select>
-    <div className="w-full lg:w-5/6">
-      <VotacaoDetail votacao={votacao} />
+    <div className="w-full">
+      {votacao !== null && <VotacaoDetail votacao={votacao} />}
     </div>
   </div>
 }

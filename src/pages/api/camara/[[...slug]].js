@@ -2,15 +2,6 @@ const redis = require('redis');
 const querystring = require('querystring');
 import config from '../../../utils/config'
 
-const isEndpointAvailable = (endpoint) => {
-  const availables = [
-    'deputados',
-    'partidos',
-    'proposicoes'
-  ];
-  return availables.indexOf(endpoint) >= 0;
-}
-
 export default async function handler(req, res) {
   const {query, url} = req;
   const { slug } = query;
