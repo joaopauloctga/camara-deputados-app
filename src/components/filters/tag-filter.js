@@ -15,8 +15,8 @@ function TagFilter({filterCategory, onChange, tagOptions, tagsSelected = []}) {
   return <div className='flex flex-wrap mb-4 border rounded-md border-colo-1 p-2 mr-4'>
     <label className="border-b border-color-1 w-full">{filterCategory}</label>
     <div className="overflow-auto max-h-80">
-      {tagOptions.map(tag => {
-        return <div key={`filter-tag-${tag.value}`}>
+      {tagOptions.map((tag, index) => {
+        return <div key={`filter-tag-${index}-${tag.value}`}>
           <input 
             className='form-check' 
             id={tag?.id || tag.value}

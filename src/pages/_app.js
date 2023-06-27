@@ -8,12 +8,14 @@ import '@fortawesome/fontawesome-svg-core/styles.css'
 config.autoAddCss = false
 import Head from 'next/head';
 import Footer from '@/app/footer';
+import Breadcrumb from '@/components/breadcrumb/breadcrumb';
 
 const MyApp = ({ Component, pageProps }) => {
   const router = useRouter();
   return (
       <>
         <Header currentRoute={router} />
+        <Breadcrumb />
         <div className="container mx-auto py-4">
           <Component {...pageProps} />
         </div>

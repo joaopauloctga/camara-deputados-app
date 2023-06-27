@@ -1,7 +1,7 @@
 import React, { use, useState } from "react";
 import style from './panel-see-more.module.scss'
 
-function PanelSeeMore({children, maxHeight=500, full = false, theme = 'default'}) {
+function PanelSeeMore({children, maxHeight=500, full = false, theme = 'green'}) {
   const [showAll, setShowAll] = useState(false)
   const height = maxHeight / 2;
   return <div style={{maxHeight: `${maxHeight}px`}} className={`${style.panelSeeMore} ${showAll ? style.showAll : ''}`}>

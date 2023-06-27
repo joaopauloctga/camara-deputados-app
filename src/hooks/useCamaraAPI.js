@@ -62,8 +62,18 @@ const fetchProxy = async (url, config)  => {
   let dataUrl = config !== undefined && config.proxy 
     ? buildInternalAPI(url) 
     : url;
+  try {
     const resp = await fetch(dataUrl, reqConfig);
-    return await resp.json();
+    const data = await resp.json();
+    return data;
+  }
+  catch (e) {
+    console.log(e)
+    return {
+      dados: [],
+      links: []
+    };
+  }
 }
 
 export const buildInternalAPI = (url) => {
