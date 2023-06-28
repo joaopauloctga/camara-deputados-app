@@ -3,10 +3,11 @@ import InfoCardRounded from '../apresentations/info-card-rounded';
 import Link from 'next/link';
 import useCamaraAPI from '@/hooks/useCamaraAPI';
 import LoadingAPI from '../loading';
+import GoToLink from '../goto-link';
 
 function PropositionItem({deputadoId, id, descricaoTipo, dataApresentacao, ementa, statusProposicao}) {
   return (
-    <Link href={`/proposicoes/${id}`}>
+    <Link href={`/deputados/${deputadoId}/proposicoes/${id}`}>
       <h6 className='text-md t-primary'>{descricaoTipo} publicado em {dataApresentacao}</h6>
       <p className='bg-white p-2 rounded-sm border border-color-1'>{ementa}</p>
       <h6 className='text-sm'>Último status: {statusProposicao.dataHora} - {statusProposicao.descricaoSituacao || 'sem descrição'}</h6>
@@ -48,10 +49,11 @@ const DeputadoProposicoes = ({ deputadoId }) => {
               <li className='mb-4' key={p.id}><PropositionItem deputadoId={deputadoId} key={p.id} {...p} /></li>
             ))}
           </ul>
-          <div className='text-center'>
-            <Link href={`/deputados/${deputadoId}/proposicoes`}>Ver todos</Link>
-          </div>
+          
         </>}
+      </div>
+      <div className='text-center w-full p-2'>
+        <GoToLink label={'Ver proposições do deputado'} link={`/deputados/${deputadoId}/proposicoes`} />
       </div>
     </div>
   );

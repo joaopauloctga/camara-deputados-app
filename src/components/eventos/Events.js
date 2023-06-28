@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import PaginationDate from "../pagination-date";
 import Orgao from "../orgao/orgao";
-import InfoCardTime from "../apresentations/info-card-time";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarXmark, faEnvelopeOpenText, faVideo, faSitemap, faClock } from "@fortawesome/free-solid-svg-icons";
 import YouTube from 'react-youtube';
@@ -17,7 +16,6 @@ const YouTubeVideo = ({ videoId }) => {
   const onReady = (event) => {
     // Access the player instance if needed
     const player = event.target;
-    console.log('Player ready:', player);
   };
 
   const onError = (event) => {
@@ -91,13 +89,13 @@ function Events({events, dateEvent, callbackDateChange}) {
           </div>
           <select className="md:hidden form-select w-full" onChange={(e) => {setDisplayEvent(e.target.value); setResourceActive('text')}}>
             <option>Selecione um horário.</option>
-            {events.map((ev, index) => <option value={index}>{ev.dataHoraInicio.slice(-5)}</option>)}
+            {events.map((ev, index) => <option key={`select-time-${index}`} value={index}>{ev.dataHoraInicio.slice(-5)}</option>)}
           </select>
           <div className="flex flex-wrap justify-between mt-4">
             <div className="w-full lg:w-1/6 lg:order-2">
               <ul className="flex flex-row flex-wrap justify-around lg:flex-col lg:ml-4 lg:justify-start">
-                {mapResources(events[displayEvent]).map((resource) => {
-                  return <li onClick={() => setResourceActive(resource.id)} className={`py-1 px-2 mb-3 text-center rounded-sm t-4 cursor-pointer ${resource.id == resourceActive ? 'bg-4-inverse border border-color-1' : 'bg-4'}`}>
+                {mapResources(events[displayEvent]).map((resource, index) => {
+                  return <li key={`resource-${index}`} onClick={() => setResourceActive(resource.id)} className={`py-1 px-2 mb-3 text-center rounded-sm t-4 cursor-pointer ${resource.id == resourceActive ? 'bg-4-inverse border border-color-1' : 'bg-4'}`}>
                     <h3>{resource.icon}</h3>
                     {resource.name}
                   </li>

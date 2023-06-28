@@ -15,9 +15,11 @@ const MyApp = ({ Component, pageProps }) => {
   return (
       <>
         <Header currentRoute={router} />
-        <Breadcrumb />
-        <div className="container mx-auto py-4">
-          <Component {...pageProps} />
+        <div className='px-2 lg:px-0'>
+          <Breadcrumb />
+          <div className="container mx-auto py-4">
+            <Component {...pageProps} />
+          </div>
         </div>
         <Footer />
       </>

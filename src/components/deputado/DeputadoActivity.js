@@ -4,9 +4,9 @@ import InfoCarList from "@/components/apresentations/info-card-list";
 import { faSitemap, faFlag} from "@fortawesome/free-solid-svg-icons";
 import useCamaraAPI from "@/hooks/useCamaraAPI";
 import LoadingAPI from "@/components/loading/index"
+import PanelSeeMore from "../panel-see-more/panel-see-more";
 
 function DeputadoFrentes({id}) {
-  const [itemsLimite, setItemsLimite] = useState(8);
   const [search, updateSearch] = useState('');
   const [frentes, setFrentes] = useState([]);
   const {isLoading, result} = useCamaraAPI({
@@ -14,21 +14,20 @@ function DeputadoFrentes({id}) {
   })
 
   useEffect(() => {
-    let data = result.slice(0, itemsLimite);
+    let data = result;
     data = data.filter(frente => search == '' || frente.titulo.includes(search))
     setFrentes(data)
-  }, [isLoading, itemsLimite, search]);
+  }, [isLoading,, search]);
 
   if (isLoading) {
     return <LoadingAPI />
   }
 
-
   return <>
     <div className="flex flex-column flex-wrap justify-center">
       {search}
       <input className="flex-auto w-full lg:w-2/3 form-input mx-8 rounded-md" onChange={(e) => updateSearch(e.currentTarget.value)} placeholder="Pequisar por frente" />
-      <div style={{maxHeight: '500px', overflow: 'auto'}} className="rounded-lg bg-white grid grid-gap-4 grid-cols-1 lg:grid-cols-2 auto-rows-auto">
+      <div className="rounded-lg bg-white grid grid-gap-4 grid-cols-1 lg:grid-cols-2">
         {frentes.map(frente => {
           return <div key={`frente-id-${frente.id}`} className="p-2">
             <InfoCarList 
@@ -36,7 +35,6 @@ function DeputadoFrentes({id}) {
           </div>
         })}
       </div>
-      {search == '' && <a className="cursor-pointer text-center" onClick={() => setItemsLimite(result.length)}>Ver mais</a>}
     </div>    
   </>
 }
@@ -58,8 +56,8 @@ function DeputadoOrgaos({id}) {
   }
   
   return <div className="rounded-lg bg-white grid grid-gap-4 grid-cols-1 lg:grid-cols-2 auto-rows-auto">
-    {orgaos.map((orgao) => {
-      return <div key={`orgao-id-${orgao.idOrgao}`} className="p-2">
+    {orgaos.map((orgao, index) => {
+      return <div key={`orgao-${index}-${orgao.idOrgao}`} className="p-2">
         <InfoCarList 
           text={orgao.nomeOrgao}
           smTitle={`${orgao.titulo}`}
@@ -70,22 +68,18 @@ function DeputadoOrgaos({id}) {
 }
 
 function DeputadoActivity({id}) {
-  const [activityDisplayId, setActivityDisplayId] = useState(1);
-  if (id == undefined) {
-    return <LoadingAPI />
-  }
-  return <>
-    <div className="flex flex-wrap">
-      <div className="w-full lg:w-1/2">
-        <InfoCardTitle active={true} title={'Orgãos Atuantes'} icon={faSitemap} />
-        <DeputadoOrgaos id={id} />
-      </div>
-      <div className="w-full lg:w-1/2">
-        <InfoCardTitle active={true} title={'Frentes'} icon={faFlag} />
-        <DeputadoFrentes id={id} />
-      </div>
+  return <div className="flex flex-wrap">
+    <div className="w-full lg:w-1/2">
+      <InfoCardTitle active={true} title={'Orgãos Atuantes'} icon={faSitemap} />
+      <DeputadoOrgaos id={id} />
     </div>
-  </>
+    <div className="w-full lg:w-1/2">
+      <InfoCardTitle active={true} title={'Frentes'} icon={faFlag} />
+      <PanelSeeMore maxHeight={300}>
+        <DeputadoFrentes id={id} />
+      </PanelSeeMore>
+    </div>
+  </div>
 }
 
 export default DeputadoActivity;

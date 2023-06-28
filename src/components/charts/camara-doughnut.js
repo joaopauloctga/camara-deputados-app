@@ -39,7 +39,7 @@ function CamaraDoughnut({height, width, labels, values, title, legendPosition = 
           let datasets = ctx.chart.data.datasets;
           if (datasets.indexOf(ctx.dataset) === datasets.length - 1) {
             let sum = datasets[0].data.reduce((a, b) => a + b, 0);
-            let percentage = Math.round((value / sum) * 100) + '%';
+            let percentage = Math.round((value / sum) * 100).toFixed(2) + '%';
             return percentage;
           } else {
             return percentage;

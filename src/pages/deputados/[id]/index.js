@@ -12,6 +12,7 @@ import DeputadoActivity from "@/components/deputado/DeputadoActivity";
 import DeputadoCurriculo from "@/components/deputado/DeputadoCurriculo";
 import DeputadoProfile from "@/components/deputado/DeputadoProfile";
 import DeputadoVotos from "@/components/deputado/DeputadoVotos";
+import GoToLink from "@/components/goto-link";
 
 export const getServerSideProps = async ({query}) => {
   const {id} = query;
@@ -77,7 +78,7 @@ function DeputadoPage({deputado}) {
     <div className="m-8"></div>
 
     <Panel id="depesas" right title={'Despesas Parlamentares'} icon={<FontAwesomeIcon icon={faChartPie} />}>
-      <div className="flex flex-wrap items-center justify-center">
+      <div className="flex flex-wrap items-center p-2 justify-center">
         <div className="w-full lg:w-1/2 p-4">
           <CamaraPie labels={Object.keys(expenseByType)} values={Object.values(expenseByType)} height={400} width={600} />
         </div>

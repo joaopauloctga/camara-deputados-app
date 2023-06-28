@@ -1,6 +1,6 @@
 import React from "react";
 
-function TagFilter({filterCategory, onChange, tagOptions, tagsSelected = []}) {
+function TagFilter({filterCategory, onChange, tagOptions, tagsSelected = [], disabled}) {
   const handleOnChange = (event) => {
     const { value, checked } = event.target;
     if (checked) {
@@ -18,6 +18,7 @@ function TagFilter({filterCategory, onChange, tagOptions, tagsSelected = []}) {
       {tagOptions.map((tag, index) => {
         return <div key={`filter-tag-${index}-${tag.value}`}>
           <input 
+            disabled={disabled}
             className='form-check' 
             id={tag?.id || tag.value}
             value={tag.value}

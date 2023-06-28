@@ -63,7 +63,12 @@ function ProposicaoVotos({votacao, id}) {
     return group;
   }
 
+  if (!isLoading && result.length === 0) {
+    return <h3 className="text-center t3 t-primary my-8">Votos não computados</h3>
+  }
+
   return <div className="flex flex-col">
+    {/** display votes of the proposicao */}
     <div className="flex flex-wrap">
       <div className="w-full lg:w-1/2">
         <h3 className="t4 t-primary text-center mb-2"><FontAwesomeIcon className="success" icon={faThumbsUp} /> Votaram a favor {!isLoading && `(${votesYes.length})`}</h3>
@@ -88,6 +93,8 @@ function ProposicaoVotos({votacao, id}) {
       </div>
     </div>
     <hr className="m-4" />
+
+    {/** display votes against the proposicao */}
     <div className="flex flex-wrap">
       <div className="w-full lg:w-1/2">
         {votesNo.length > 0 &&
@@ -111,6 +118,8 @@ function ProposicaoVotos({votacao, id}) {
       </div>
     </div>
     <hr className="m-4" />
+
+    {/** display charts of votes data */}
     <div className="flex flex-wrap p-4">
       <div className="w-full lg:w-1/3">
         <CamaraDoughnut 

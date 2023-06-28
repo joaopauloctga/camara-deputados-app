@@ -9,7 +9,6 @@ import ProfilePhoto from "@/components/deputado/ProfilePhoto";
 import PanelSeeMore from "../panel-see-more/panel-see-more";
 
 function ProposicaoAutores({id}) {
-  console.log('prop', id)
   const [autores, setAutores] = useState([]);
   const [filterSexo, setFilterSexo] = useState(['F', 'M']);
   const [filterPartidos, setFilterPartidos] = useState([]);
@@ -38,7 +37,6 @@ function ProposicaoAutores({id}) {
   }
 
   let autoresSummary = result.reduce((grupo, autor) => {
-    console.log(autor)
     if (grupo[autor.ultimoStatus.siglaPartido] == undefined) {
       grupo[autor.ultimoStatus.siglaPartido] = 0;
     }
@@ -66,8 +64,7 @@ function ProposicaoAutores({id}) {
         <ul className="flex flex-wrap">
           {autores.sort((a, b) => a.ordemAssinatura - b.ordemAssinatura).map(autor => {
             return <Link href={`/deputados/${autor.id}`} key={autor.id} className="w-1/2 lg:w-1/3">
-              <ProfilePhoto foto={autor.ultimoStatus.urlFoto} alt={autor.nome} size="sm" />
-              <h3>{autor.nome} - {autor.ultimoStatus.siglaPartido}</h3>
+              <ProfilePhoto name={`${autor.nome} - ${autor.ultimoStatus.siglaPartido}`} foto={autor.ultimoStatus.urlFoto} alt={autor.nome} size="sm" />
             </Link>
           })}
         </ul>
