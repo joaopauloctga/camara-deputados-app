@@ -1,0 +1,41 @@
+.panelSeeMore {
+  z-index: 1;
+  position: relative;
+  overflow: hidden;
+  &.showAll {
+    max-height: none;
+    overflow: auto;
+  }
+
+.shadowContainer {
+  text-align: center;
+  &.default {
+    background-image: linear-gradient(to top, rgb(82, 112, 190), rgba(82, 112, 190, 0));
+  }
+  &.green {
+    background-image: linear-gradient(to top, rgb(241, 255, 245), rgba(82, 112, 190, 0));
+  }
+  
+  position: absolute;
+  border-radius: 8px;
+  z-index: 5;
+  bottom: 0;
+  width: 100%;
+  &.full {
+    height: 100%;
+  }
+}
+
+button {
+  z-index: 6;
+  text-transform: uppercase;
+  position: relative;
+  width: 100%;
+  margin: 2px;
+  bottom: 30px;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+  
+}

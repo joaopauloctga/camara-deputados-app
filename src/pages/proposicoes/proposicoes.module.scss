@@ -1,0 +1,43 @@
+@import '../../../styles/variables.scss';
+
+.tableDetails {
+
+  td {
+    @apply border-collapse border;
+    padding: 5px
+  }
+
+  td:last-child {
+    text-align: right;
+  }
+
+  td:first-child {
+    text-align: left;
+  }
+  
+}
+
+.tramitacoes {
+  max-height: 800px;
+  overflow: hidden;
+
+  &.full {
+    max-height: none;
+  }
+}
+
+.limit {
+  text-align: center;
+  background-image: linear-gradient(to top, silver, white);
+  height: 100px;
+  position: relative;
+  padding: 20px 0;
+  top: 0px;
+  border-radius: 8px;
+  button {
+    text-transform: uppercase;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

@@ -1,0 +1,39 @@
+.profileFeature {
+  @apply flex items-center flex-wrap flex-col;
+
+  .profilePicture {
+    width: 380px;
+    height: 380px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid #5270BE;
+    text-align: center;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    &.sm {
+      width: 150px;
+      height: 150px;
+    }
+    &.xs {
+      width: 100px;
+      height: 100px;
+    }
+  }
+
+  .profileDetails {
+    margin-left: 16px;
+
+    h2 {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    p {
+      font-size: 14px;
+      margin-top: 4px;
+    }
+  }
+}

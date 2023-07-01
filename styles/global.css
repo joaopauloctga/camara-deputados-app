@@ -1,0 +1,182 @@
+.t1,
+.t2,
+.t3 {
+  font-family: "Bitter", serif;
+}
+
+p, span {
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0em;
+}
+
+.t1 {
+  font-style: 900;
+  font-size: 48px;
+  line-height: 58px;
+  font-weight: 900;
+}
+
+.t2 {
+  font-size: 38px;
+  font-weight: 800;
+  line-height: 48px;
+}
+
+.t3 {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 28px;
+}
+
+.t4 {
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 600;
+}
+
+.t5 {
+  font-size: 18px;
+  line-height: 18px;
+  font-weight: 500;
+}
+
+.t-circle {
+  width: 120px;
+  height: 120px;
+  background-color: #5270BE;
+}
+
+.t-up {
+  text-transform: uppercase;
+}
+
+.t-icon {
+  font-size: 68px;
+}
+
+.t-icon-4 {
+  font-size: 28px;
+}
+
+.bg-1 {
+  background-color: #009C2D;
+  color: #FFFFFF;
+}
+
+.bg-2 {
+  background-color: #A4D2AB;
+  color: #000000;
+}
+
+.bg-3 {
+  background-color: #F1FFF5;
+  color: #000000;
+}
+
+.bg-4 {
+  background-color: #5270BE;
+  color: #FFFFFF;
+}
+
+.border-color-1 {
+  border-color: #009C2D;
+}
+
+.border-color-2 {
+  border-color: #A4D2AB;
+}
+
+.border-color-3 {
+  border-color: #F1FFF5;
+}
+
+.border-color-4 {
+  border-color: #5270BE;
+}
+
+.bg-4-inverse {
+  background-color: #FFFFFF;
+  color: #5270BE;
+}
+
+.bg-hover-1:hover {
+  background-color: #FFFFFF;
+  color: #009C2D;
+}
+
+.bg-hover-2:hover {
+  background-color: #5270BE;
+  color: #FFFFFF;
+}
+
+.border-color-1 {
+  border-color: #5270BE;
+}
+
+.t-primary {
+  color: #5270BE;
+}
+
+.t-secondary {
+  color: #009C2D;
+}
+
+.t-white {
+  color: #FFFFFF;
+}
+
+.t-black {
+  color: #000000;
+}
+
+.btn-1 {
+  @apply rounded-md px-3 py-2 text-sm font-medium;
+  background-color: #5270BE;
+  color: #FFFFFF;
+  text-transform: uppercase;
+}
+
+.btn-2 {
+  @apply rounded-md px-2 py-1;
+  font-size: 10px;
+  background-color: #5270BE;
+  color: #FFFFFF;
+  text-transform: uppercase;
+}
+
+.danger {
+  color: #F86262;
+}
+
+.warning {
+  color: #FAE655;
+}
+
+.info {
+  color: #5BAFD3;
+}
+
+.success {
+  color: #84D79C;
+}
+
+.bg-danger {
+  color: #F86262;
+}
+
+.bg-warning {
+  color: #FAE655;
+}
+
+.bg-info {
+  color: #5BAFD3;
+}
+
+.bg-success {
+  color: #84D79C;
+}
+
+/*# sourceMappingURL=global.css.map */
