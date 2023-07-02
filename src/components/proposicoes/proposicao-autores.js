@@ -7,6 +7,22 @@ import { faVenus, faMars } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import ProfilePhoto from "@/components/deputado/ProfilePhoto";
 import PanelSeeMore from "../panel-see-more/panel-see-more";
+import InfoCarList from "../apresentations/info-card-list";
+
+function DeputadoAutor({autor}) {
+  return <ProfilePhoto name={`${autor.nome} - ${autor.ultimoStatus.siglaPartido}`} foto={autor.ultimoStatus.urlFoto} alt={autor.nome} size="sm" />
+}
+
+function OrgaoAutor({orgao}) {
+  return <InfoCarList smTitle={orgao.tipoOrgao} text={orgao.nome} subText={orgao.sigla} />
+}
+
+function Autor({autor}) {
+  if (autor.tipo === 'Deputado') {
+    return <DeputadoAutor autor={autor} />
+  }
+  return <OrgaoAutor orgao={autor} />
+}
 
 function ProposicaoAutores({id}) {
   const [autores, setAutores] = useState([]);
@@ -26,9 +42,12 @@ function ProposicaoAutores({id}) {
 
   useEffect(() => {
     if (!isLoading) {
-      setAutores(result.filter((autor) => {
-        return filterSexo.includes(autor.sexo) || (filterPartidos.length > 0 && filterPartidos.includes(autor.siglaPartido))
-      }))
+      // @todo tratar cenario de autor ser orgao
+      // const filtered = result.filter((autor) => {
+      //   return filterSexo.includes(autor.sexo) || (filterPartidos.length > 0 && filterPartidos.includes(autor.siglaPartido))
+      // })
+      // console.log(filtered)
+      setAutores(result)
     }
   }, [isLoading, filterPartidos, filterSexo])
 
@@ -37,10 +56,14 @@ function ProposicaoAutores({id}) {
   }
 
   let autoresSummary = result.reduce((grupo, autor) => {
-    if (grupo[autor.ultimoStatus.siglaPartido] == undefined) {
-      grupo[autor.ultimoStatus.siglaPartido] = 0;
+    const key = autor.tipo === 'Deputado'
+      ? autor.ultimoStatus.siglaPartido
+      : autor.sigla;
+
+    if (grupo[key] == undefined) {
+      grupo[key] = 0;
     }
-    grupo[autor.ultimoStatus.siglaPartido]++
+    grupo[key]++
     return grupo
   }, {});
 
@@ -63,9 +86,7 @@ function ProposicaoAutores({id}) {
       <PanelSeeMore maxHeight={500}>
         <ul className="flex flex-wrap">
           {autores.sort((a, b) => a.ordemAssinatura - b.ordemAssinatura).map(autor => {
-            return <Link href={`/deputados/${autor.id}`} key={autor.id} className="w-1/2 lg:w-1/3">
-              <ProfilePhoto name={`${autor.nome} - ${autor.ultimoStatus.siglaPartido}`} foto={autor.ultimoStatus.urlFoto} alt={autor.nome} size="sm" />
-            </Link>
+            return <li key={autor.id}><Autor autor={autor} /></li>
           })}
         </ul>
       </PanelSeeMore>

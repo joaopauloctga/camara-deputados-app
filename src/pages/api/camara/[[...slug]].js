@@ -1,32 +1,42 @@
 const redis = require('redis');
 const querystring = require('querystring');
-import config from '../../../utils/config'
+import config from '../../../utils/config';
 
-export default async function handler(req, res) {
-  const {query, url} = req;
-  const { slug } = query;
-  const params = {};
+const cacheServer = require('../../../infra/cache');
 
-  Object
-    .keys(query)
-    .filter(paramName => paramName !== 'slug')
-    .forEach((paramName) => {
-      params[paramName] = query[paramName];
-    });
+async function getSubData() {
+  let item, subData = null;
+  for (let i=0; i<dados.length; i++) {
+    item = dados[i];
+    let uri = item.deputado_ !== undefined
+      ? item.deputado_.uri
+      : item.uri;
+    subData = await fetchProxy(uri, {proxy: config?.subReqProxy !== undefined})
+    data[i] = {
+      ...item,
+      ...subData.dados
+    }
+  }
+}
 
-  const cacheServer = require('../../../infra/cache');
-  const cacheKey = buildCacheKeyName(slug);
+async function getData(url) {
+  const cacheKey = buildCacheKeyName(url);
+  let path = url.slice(`/api/camara/`).join('/');
 
-  let path = url.slice(`/api/camara/`.length);
   const cachedResponse = await cacheServer.getCache(cacheKey);
   if (cachedResponse && !path.includes('?')) {
-    res.json(JSON.parse(cachedResponse))
+    return JSON.parse(cachedResponse)
   }
-  else {
-    const resp = await callCamaraAPI(`${config.CAMARA_DEPUTADOS_ENDPOINT}${path}`);
-    res.json(resp);
-    cacheServer.setCache(cacheKey, resp);
-  }
+  const resp = await callCamaraAPI(`${config.CAMARA_DEPUTADOS_ENDPOINT}${path}`);
+  cacheServer.setCache(cacheKey, resp);
+  return resp;
+}
+
+export default async function handler(req, res) {
+  const {query, headers} = req;
+  const { slug } = query;
+  const data = await getData(slug);
+  res.json(data);
 }
 
 const callCamaraAPI = async (url) => {

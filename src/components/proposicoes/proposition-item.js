@@ -23,9 +23,9 @@ function PropositionItem({siglaTipo, id, codTipo, dataApresentacao, numero, stat
           <span> Nº {numero} </span>
           <span> - </span>
         </div>
-        <p>{ementa}</p>      
+        <p>{ementa}</p>
       </div>
-      <p className="text-xs t-primary">Último status: {statusProposicao.sequencia}º fase, {statusProposicao.despacho} para o orgão {statusProposicao.siglaOrgao} {`->`} {statusProposicao.descricaoTramitacao}</p>
+      <p className="text-xs t-primary">Último status: {statusProposicao?.sequencia}º fase, {statusProposicao?.despacho} para o orgão {statusProposicao.siglaOrgao} {`->`} {statusProposicao.descricaoTramitacao}</p>
     </div>
   </div>
 }

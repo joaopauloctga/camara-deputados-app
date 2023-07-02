@@ -16,7 +16,7 @@ const DeputadoFilterListPage = ({onChange, partidosPreChecked, legDefault}) => {
   const [name, setName] = useState('');
   const [legSelected, setLegSelected] = useState(legDefault);
   const [partidosChecked, setPartidoChecked] = useState(partidosPreChecked)
-  const partidos = useSWR(`${baseAPI}/partidos?idLegislatura=${legDefault}`, fetcher);
+  const partidos = useSWR(`${baseAPI}/partidos?idLegislatura=${legDefault}&itens=100`, fetcher);
   const legislaturas = useSWR(`${baseAPI}/legislaturas`, fetcher);
 
   const handlePartidosCheck = (event) => {
@@ -69,7 +69,7 @@ const DeputadoFilterListPage = ({onChange, partidosPreChecked, legDefault}) => {
               checked={partidosChecked.includes(p.sigla)} 
               onChange={handlePartidosCheck} 
               type='checkbox' 
-            /> <label className='cursor-pointer' htmlFor={p.sigla}>{p.sigla}</label>
+            /> <label className='cursor-pointer text-xs' htmlFor={p.sigla}>{p.sigla}</label>
           </div>
         })}
       </div>

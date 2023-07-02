@@ -3,7 +3,7 @@ import style from './panel-see-more.module.scss'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAnglesDown } from "@fortawesome/free-solid-svg-icons";
 
-function PanelSeeMore({children, maxHeight=500, full = false, theme = 'green', finished}) {
+function PanelSeeMore({children, maxHeight=500, full = false, theme = 'white', finished}) {
   const [showAll, setShowAll] = useState(false)
   const height = maxHeight / 2;
   const childrenRef = useRef(null)

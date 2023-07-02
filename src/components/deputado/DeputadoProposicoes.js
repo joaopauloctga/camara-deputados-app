@@ -10,7 +10,7 @@ function PropositionItem({deputadoId, id, descricaoTipo, dataApresentacao, ement
     <Link href={`/deputados/${deputadoId}/proposicoes/${id}`}>
       <h6 className='text-md t-primary'>{descricaoTipo} publicado em {dataApresentacao}</h6>
       <p className='bg-white p-2 rounded-sm border border-color-1'>{ementa}</p>
-      <h6 className='text-sm'>Último status: {statusProposicao.dataHora} - {statusProposicao.descricaoSituacao || 'sem descrição'}</h6>
+      <h6 className='text-sm'>Último status: {statusProposicao?.dataHora} - {statusProposicao?.descricaoSituacao || 'sem descrição'}</h6>
     </Link>
   )
 }

@@ -75,7 +75,7 @@ function DeputadoActivity({id}) {
     </div>
     <div className="w-full lg:w-1/2">
       <InfoCardTitle active={true} title={'Frentes'} icon={faFlag} />
-      <PanelSeeMore maxHeight={300}>
+      <PanelSeeMore maxHeight={400}>
         <DeputadoFrentes id={id} />
       </PanelSeeMore>
     </div>

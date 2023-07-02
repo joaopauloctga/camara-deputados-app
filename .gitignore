@@ -166,3 +166,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 >>>>>>> ebc286f (Initial commit from Create Next App)
+
+# project files/folder git ignore
+src/pages/api/cached/

@@ -58,11 +58,18 @@ const extractTotalItemsFromLink = (link) => {
 }
 
 const fetchProxy = async (url, config)  => {
-  const reqConfig = {};
   let dataUrl = config !== undefined && config.proxy 
     ? buildInternalAPI(url) 
     : url;
+  // let configHeaders = {};
+  // if (config.subRequest && config !== undefined && config.proxy) {
+  //   console.log('fsdjfksjd');
+  //   configHeaders.headers = {
+  //     'sub-request': true,
+  //   };
+  // }
   try {
+    // console.log(dataUrl);
     const resp = await fetch(dataUrl);
     const data = await resp.json();
     return data;
@@ -95,6 +102,7 @@ function useCamaraAPI({url, subRequest, config}) {
     
     let {dados, links} = await fetchProxy(url, {
       proxy: config?.proxy !== undefined,
+      subRequest: subRequest
     });
     let data = dados;
     
@@ -105,7 +113,6 @@ function useCamaraAPI({url, subRequest, config}) {
         let uri = item.deputado_ !== undefined
           ? item.deputado_.uri
           : item.uri;
-
         subData = await fetchProxy(uri, {proxy: config?.subReqProxy !== undefined})
         data[i] = {
           ...item,
