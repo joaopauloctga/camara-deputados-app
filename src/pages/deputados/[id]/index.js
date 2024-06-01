@@ -69,7 +69,7 @@ function DeputadoPage({deputado}) {
 
   return <>
     
-    {id !== undefined && <DeputadoProfile deputado={deputado} />}
+    <DeputadoProfile deputado={deputado} />
 
     <Panel id="proposicoes" title={'Proposições'} icon={<FontAwesomeIcon icon={faBookOpen} />}>
       <DeputadoProposicoes deputadoId={id} />
@@ -91,7 +91,7 @@ function DeputadoPage({deputado}) {
     <div className="m-8"></div>
 
     <div id="curriculo">
-      {id !== undefined && <DeputadoCurriculo id={id} />}
+      <DeputadoCurriculo id={id} />
     </div>
 
     <div className="m-8"></div>

@@ -179,4 +179,24 @@ p, span {
   color: #84D79C;
 }
 
+.deputado-rounded {
+  border-radius: 50%;
+}
+
+.text-color-1 {
+  color: #009C2D;
+}
+
+.text-color-2 {
+  color: #A4D2AB;
+}
+
+.text-color-3 {
+  color: #F1FFF5;
+}
+
+.text-color-4 {
+  color: #5270BE;
+}
+
 /*# sourceMappingURL=global.css.map */

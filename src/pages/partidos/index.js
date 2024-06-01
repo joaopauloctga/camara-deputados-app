@@ -1,94 +1,89 @@
-import ProfilePhoto from '@/components/deputado/ProfilePhoto';
-import PanelSeeMore from '@/components/panel-see-more/panel-see-more';
-import Panel from '@/components/panel/panel';
-import { faHouse } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Image from 'next/image';
+import LoadingAPI from '@/components/loading';
+import useCamaraAPI from '@/hooks/useCamaraAPI';
 import React, { useState } from 'react';
+import Image from 'next/image';
+import ProfilePhoto from '@/components/deputado/ProfilePhoto';
+import Link from 'next/link';
+import { formatDate } from '@/utils/common';
 
-function PartidoDetails({id, nome, sigla, status, urlLogo, lideres, parlamentares}) {
-  return <div className='flex flex-col lg:flex-row flex-wrap p-2'>
-    <div className='w-full lg:w-3/6'>
-      <div className='flex flex-wrap items-center justify-center'>
-        <div className='w-full text-center'>
-          <Image className='mx-auto' alt={nome} src={`/logos/partidos/${sigla.toLowerCase()}.png`} width={300} height={300} />
-          {/* <FontAwesomeIcon style={{fontSize: '120px'}} className='t-primary' icon={faHouse} /> */}
-        </div>
-      </div>
-    </div>
-    {/* <div className='w-full lg:w-2/6 text-center'>
-      <h3 className='t3 t-primary mb-2'>Lideres do partido</h3>
-      {lideres.length === 0 && <h3>Nenhum lider definido</h3>}
-      <PanelSeeMore maxHeight={400}>
-        <div className='flex flex-wrap justify-center items-center'>
-          {lideres.map(p => <div className='w-1/2'><ProfilePhoto size={sizeLiderImage} name={p.nome} foto={p.urlFoto} /></div>)}
-        </div>
-      </PanelSeeMore>
-    </div> */}
-    <div className='w-full lg:w-3/6'>
-      <h3 className='t3 t-primary text-center mb-2'>Membros do partido ({parlamentares.length})</h3>
-      <PanelSeeMore maxHeight={400}>
-        <div className='flex flex-wrap'>
-          {parlamentares.map(p => <div className='w-1/4'><ProfilePhoto size='xs' name={p.nome} foto={p.urlFoto} /></div>)}
-        </div>
-      </PanelSeeMore>
-    </div>
+const PartidoLideres = ({id}) => {
+  const {isLoading, result} = useCamaraAPI({
+    url: `partidos/${id}/lideres`
+  });
+  if (isLoading) {
+    return <LoadingAPI />
+  }
+  else if (result.length === 0) {
+    return <h4>Sem lider definido</h4>
+  }
+  return <div>
+    <ul>
+      {result.filter(l => l.titulo === 'Líder').map(lider => {
+        return <>
+          <li key={`lider-cod-${lider.codTitulo}`}>
+            <div className='flex flex-wrap flex-column justify-center items-center p-4'>
+              <div className='w-full'>
+                <ProfilePhoto foto={lider.urlFoto} nome={lider.nome} size='xs' />
+              </div>
+              <div className='w-full text-center'>
+                <h4 className='text-center text-sm'>Líder desde {formatDate(lider.dataInicio)}</h4>
+                <h4 className='text-center font-medium'>{lider.nome}</h4>
+              </div>
+            </div>
+          </li>
+        </>
+      })}
+    </ul>
   </div>
 }
 
-function FiltroPartidos() {
-  return <div className='rounded-sm border border-color-1 p-1'>
-    <div>
-      <h3 className='text-sm t-primary'>Order por</h3>
-      <ul>
-        <li className=''>
-          <input type='checkbox' id='mais-deputados' className='form-check' />
-          <label htmlFor='mais-deputados'>Com mais deputados</label>
-        </li>
-        <li className=''>
-          <input type='checkbox' id='mais-deputados' className='form-check' />
-          <label htmlFor='mais-deputados'>Mais Mulheres</label>
-        </li>
-        <li className=''>
-          <input type='checkbox' id='mais-deputados' className='form-check' />
-          <label htmlFor='mais-deputados'>Mais Homens</label>
-        </li>
-        <li className=''>
-          <input type='checkbox' id='mais-deputados' className='form-check' />
-          <label htmlFor='mais-deputados'>Mais Projetos de Lei</label>
-        </li>
-      </ul>
-    </div>
+const PartidoImage = ({src, alt, width = 350, height = 100}) => {
+  const [imgDefault, setImgDefault] = useState(false)
+  const onError = () => {
+    setImgDefault("/logos/partidos/default.png")
+  }
+  return <Image onError={onError} className='self-center' src={imgDefault ? imgDefault : src} alt='logo partido' width={width} height={height} />
+}
+
+const PartidoDetails = ({id, sigla, nome}) => {
+  const { isLoading: isPartidoLoading, result: partidoDetails } = useCamaraAPI({
+    url: `partidos/${id}`,
+  });
+
+  return <div className='grid grid-cols-2 justify-items-center items-center'>
+    {isPartidoLoading ? <LoadingAPI /> : (
+      <>
+        <div className='p-4'>
+          <PartidoImage src={`/logos/partidos/${partidoDetails.nome.toLowerCase()}.png`} />
+          <ul className='text-sm'>
+            <li className='text-base font-semibold'>{partidoDetails.sigla}</li>
+            <li className='font-medium'>{partidoDetails.nome}</li>
+            <li>{partidoDetails.status.situacao} - {formatDate(partidoDetails.status.data)}</li>
+            <li>Membros - {partidoDetails.status.totalMembros}</li>
+            <li>Posses - {partidoDetails.status.totalPosse}</li>
+          </ul>
+        </div>
+        <PartidoLideres id={id} />
+      </>
+    )}
   </div>
 }
 
 const PartidosList = () => {
-  const [partidosList, setPartidosList] = useState([]);
-
-  const fetchPartidos = () => {
-    fetch('http://localhost:3000/api/partidos')
-      .then((resp) => resp.json())
-      .then(dados => setPartidosList(dados))
-  }
-
-  useState(() => {
-    fetchPartidos();
-  }, []);
-
+  const { isLoading: isLoadingPartidos, result: partidos } = useCamaraAPI({
+    url: 'partidos'
+  });
   return (
-    <div className="flex flex-wrap">
-      <div className='w-full lg:w-2/12'>
-        <FiltroPartidos />
-      </div>
-      <div className='w-full lg:w-10/12 pl-2'>
-        {partidosList.map((partido) => (
-          <div className='mb-4' key={partido.id}>
-            <Panel right title={partido.nome}>
-              <PartidoDetails {...partido} />
-            </Panel>
-          </div>        
-        ))}
-      </div>
+    <div className="grid lg:grid-cols-2 gap-3">
+      {isLoadingPartidos ? <LoadingAPI /> : (
+        <>
+          {partidos.map(p => {
+            return <Link key={p.id} href={`partidos/${p.sigla.toLowerCase()}`}>
+              <div className='border rounded'><PartidoDetails {...p} /></div>
+            </Link>
+          })}
+        </>
+      )}
     </div>
   );
 };

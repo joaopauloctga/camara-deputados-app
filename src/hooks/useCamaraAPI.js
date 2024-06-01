@@ -61,6 +61,7 @@ const fetchProxy = async (url, config)  => {
   let dataUrl = config !== undefined && config.proxy 
     ? buildInternalAPI(url) 
     : url;
+  console.log(`camaraAPI calling ${dataUrl}`)
   // let configHeaders = {};
   // if (config.subRequest && config !== undefined && config.proxy) {
   //   console.log('fsdjfksjd');
@@ -99,7 +100,6 @@ function useCamaraAPI({url, subRequest, config}) {
 
   const fetchData = async (url) => {
     updateLoadingStatus(true);
-    
     let {dados, links} = await fetchProxy(url, {
       proxy: config?.proxy !== undefined,
       subRequest: subRequest

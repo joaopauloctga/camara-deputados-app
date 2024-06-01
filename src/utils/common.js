@@ -14,3 +14,8 @@ export const reduceToObject = (arrayData, key) => {
   }, {});
   return sortObject(group)
 }
+
+export const formatDate = (date) => {
+  const [year, month, day] = date.slice(0, 10).split('-');
+  return `${day} / ${month} / ${year}`
+}

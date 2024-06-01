@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser, faBuildingFlag, faFileLines, faCalendarDays, faHome } from "@fortawesome/free-solid-svg-icons";
+import Image from 'next/image';
 
 const Header = ({currentRoute}) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,10 +27,11 @@ const Header = ({currentRoute}) => {
     setIsMenuOpen(!isMenuOpen);
   };
   const links = [
-    ['Deputados', '/deputados'],
-    ['Proposições', '/proposicoes'],
-    ['Partidos', '/partidos'],
-    ['Eventos', '/eventos'],
+    ['Home', '/', faHome],
+    ['Deputados', '/deputados', faUser],
+    ['Proposições', '/proposicoes', faFileLines],
+    ['Partidos', '/partidos', faBuildingFlag],
+    ['Eventos', '/eventos', faCalendarDays],
   ];
   
   const linkClass = 'text-white bg-hover-1 hover-primary';
@@ -39,16 +43,15 @@ const Header = ({currentRoute}) => {
   }
 
   return (
-    <nav className="bg-1 py-4">
+    <nav className="bg-1 flex items-center">
       <div className="container mx-auto flex justify-between items-center">
         <div>
-          <Link href="/">Home</Link>
+          <Link href="/">
+            <Image src="/logo.png" alt='Logo camara dados' width={60} height={100} />
+          </Link>
         </div>
         <div className="hidden lg:flex space-x-4">
           {/* Desktop Menu */}
-          <Link href="/">
-            Home
-          </Link>
           {links.map((link, index) => (
             <Link
               key={`link-key-${index}`}
@@ -57,7 +60,7 @@ const Header = ({currentRoute}) => {
                 menuLinkIsActive(link[1]) ? linkActive : linkClass
               } rounded-md px-3 py-2`}
             >
-              {link[0]}
+              <FontAwesomeIcon icon={link[2]} /> {link[0]}
             </Link>
           ))}
           <Link href="/entrar" className="btn-1">
