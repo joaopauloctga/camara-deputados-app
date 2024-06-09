@@ -8,9 +8,6 @@ function ProposicaoTemas({id}) {
     isLoading, result
   } = useCamaraAPI({
     url: `proposicoes/${id}/temas`,
-    config: {
-      proxy: true,
-    }
   })
   if (isLoading) {
     return <LoadingAPI />

@@ -23,7 +23,7 @@ const PartidoLideres = ({id}) => {
           <li key={`lider-cod-${lider.codTitulo}`}>
             <div className='flex flex-wrap flex-column justify-center items-center p-4'>
               <div className='w-full'>
-                <ProfilePhoto foto={lider.urlFoto} nome={lider.nome} size='xs' />
+                <ProfilePhoto foto={lider.urlFoto} nome={lider.nome} size='sm' />
               </div>
               <div className='w-full text-center'>
                 <h4 className='text-center text-sm'>Líder desde {formatDate(lider.dataInicio)}</h4>

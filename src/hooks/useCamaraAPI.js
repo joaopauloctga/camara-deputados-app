@@ -61,16 +61,8 @@ const fetchProxy = async (url, config)  => {
   let dataUrl = config !== undefined && config.proxy 
     ? buildInternalAPI(url) 
     : url;
-  console.log(`camaraAPI calling ${dataUrl}`)
-  // let configHeaders = {};
-  // if (config.subRequest && config !== undefined && config.proxy) {
-  //   console.log('fsdjfksjd');
-  //   configHeaders.headers = {
-  //     'sub-request': true,
-  //   };
-  // }
+
   try {
-    // console.log(dataUrl);
     const resp = await fetch(dataUrl);
     const data = await resp.json();
     return data;
@@ -149,7 +141,7 @@ function useCamaraAPI({url, subRequest, config}) {
   }, [url]);
 
   const handleRequest = (url) => {
-    fetchData(url)
+    fetchData(url);
   }
 
   return { isLoading, result, nextPage, previousPage, lastPage, firstPage, totalItems, error, handleRequest }

@@ -22,7 +22,6 @@ function ProposicoesList({deputadoId}) {
   const itens = 5;
   let initialFetchUrl = `proposicoes?ordenarPor=ano&itens=${itens}&ordem=desc`;
   if (deputadoId !== undefined) {
-    
     initialFetchUrl += `&idDeputadoAutor=${deputadoId}`;
   }
 
@@ -40,9 +39,6 @@ function ProposicoesList({deputadoId}) {
   const { isLoading, result, nextPage, previousPage, handleRequest } = useCamaraAPI({
     url: url,
     subRequest: true,
-    config: {
-      subReqProxy: true,
-    }
   });
 
   const handleSearch = (e) => {
@@ -82,7 +78,7 @@ function ProposicoesList({deputadoId}) {
       : '';
 
     setUrl(`proposicoes?ordenarPor=ano&ordem=desc&itens=${itens}${deputadoFilter}${codTemas}${codTramitacao}${siglaTipo}${keywords}`);
-  }, [temasChecked, statusCodeChecked, siglaTiposChecked, keywordsFilter]);
+  }, [temasChecked, statusCodeChecked, siglaTiposChecked, keywordsFilter, deputadoId, isFiltering, initialFetchUrl]);
 
   return <div className="flex flex-wrap">
     <div className="hidden lg:block w-1/6">
@@ -106,7 +102,7 @@ function ProposicoesList({deputadoId}) {
             disabled={isLoading}
           /> 
       }
-      {/* {codStatus.isLoading 
+      {codStatus.isLoading 
         ? <h1>Carregando</h1> 
         : <TagFilter 
             filterCategory={'Filtrar por status'}
@@ -115,7 +111,7 @@ function ProposicoesList({deputadoId}) {
             tagsSelected={statusCodeChecked}
             disabled={isLoading}
           /> 
-      } */}
+      }
     </div>
     <div className="w-full lg:w-5/6">
       <div className="w-full">

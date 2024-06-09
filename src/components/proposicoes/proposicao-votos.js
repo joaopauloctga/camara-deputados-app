@@ -16,10 +16,6 @@ function ProposicaoVotos({votacao, id}) {
   const {isLoading, result} = useCamaraAPI({
     url: `votacoes/${votacao.id}/votos`,
     subRequest: true,
-    config: {
-      proxy: true,
-      subReqProxy: true,
-    }
   });
 
   const orientacoes = useCamaraAPI({

@@ -10,9 +10,6 @@ function ProposicaoTramitacoes({id}) {
     isLoading, result
   } = useCamaraAPI({
     url: `proposicoes/${id}/tramitacoes`,
-    config: {
-      proxy: true
-    }
   });
 
   if (isLoading) {

@@ -8,6 +8,12 @@ import ProposicaoRelationship from "@/components/proposicoes/proposicao-relation
 import ProposicaoTramitacoes from "@/components/proposicoes/proposicao-tramitacoes";
 import ProposicaoVotacoes from "@/components/proposicoes/proposicao-votacoes";
 
+/**
+ * Lista da proposicoes para testar
+ * 
+ * 2418080 - 198 autores.
+ */
+
 export const getServerSideProps = async ({query}) => {
   const resp = await fetch(`http://localhost:3000/api/camara/proposicoes/${query.id}`);
   const {dados, links} = await resp.json();

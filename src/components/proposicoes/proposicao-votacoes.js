@@ -8,7 +8,7 @@ import VotacaoDetail from "@/components/proposicoes/proposicao-votacao";
 
 function ProposicaoVotacoes({id}) {
   const [votacao, setVotacao] = useState(null);
-  const {isLoading, result} = useCamaraAPI({url: `proposicoes/${id}/votacoes`, config: {proxy: true}});
+  const {isLoading, result} = useCamaraAPI({url: `proposicoes/${id}/votacoes`});
 
   useEffect(() => {
     if (!isLoading && votacao === null) {

@@ -33,11 +33,7 @@ function ProposicaoAutores({id}) {
     isLoading, result
   } = useCamaraAPI({
     url: `proposicoes/${id}/autores`,
-    subRequest: true,
-    config: {
-      proxy: true,
-      subReqProxy: true
-    }
+    subRequest: true
   });
 
   useEffect(() => {
@@ -54,6 +50,8 @@ function ProposicaoAutores({id}) {
   if (isLoading) {
     return <LoadingAPI />
   }
+
+  console.log(result)
 
   let autoresSummary = result.reduce((grupo, autor) => {
     const key = autor.tipo === 'Deputado'

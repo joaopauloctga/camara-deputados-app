@@ -28,7 +28,7 @@ const Footer = () => {
               <Image src="/logo.png" alt='Logo camara dados' width={60} height={100} />
               <h3 className='ml-4 t2'>Camara dados</h3>
             </div>
-            <p className='mt-2 text-xs'>
+            <p className='mt-4 text-xs'>
               O Câmara Dados é um portal dedicado a fornecer informações detalhadas e atualizadas sobre as atividades da Câmara dos Deputados do Brasil. Nosso objetivo é tornar acessíveis dados importantes sobre projetos de lei, votações, eventos e outras atividades legislativas, promovendo transparência e facilitando o acompanhamento das ações dos representantes eleitos.
             </p>
           </div>

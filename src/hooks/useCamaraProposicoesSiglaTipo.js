@@ -16,9 +16,6 @@ function useCamaraProposicaoSiglaTipo(props) {
   const [data, setData] = useState([]);
   const { isLoading, result } = useCamaraAPI({
     url: 'referencias/proposicoes/siglaTipo',
-    config: {
-      proxy: true
-    }
   });
 
   useEffect(() => {
