@@ -82,7 +82,7 @@ function Events({events, dateEvent, callbackDateChange}) {
           <div className="hidden lg:flex">
             {events.map((ev, index) => {
               const styleActive = ev.id === events[displayEvent].id ? 'bg-4-inverse rounded-sm border border-color-1' : '';
-              return <div onClick={() => {setDisplayEvent(index); setResourceActive('text')}} className={`p-1 rounded-sm cursor-pointer mr-1 ${styleActive}`}>
+              return <div key={ev.id} onClick={() => {setDisplayEvent(index); setResourceActive('text')}} className={`p-1 rounded-sm cursor-pointer mr-1 ${styleActive}`}>
                 <h1 style={{fontSize: '12px'}}><FontAwesomeIcon icon={faClock} /> {ev.dataHoraInicio.slice(-5)}</h1>
               </div>
             })}
@@ -110,7 +110,7 @@ function Events({events, dateEvent, callbackDateChange}) {
               </>
               }
               {resourceActive == 'video' && <YouTubeVideo videoId={events[displayEvent].urlRegistro.split('v=')[1]} />}
-              {resourceActive == 'orgaos' && events[displayEvent].orgaos.map(org => <Orgao {...org} />)}
+              {resourceActive == 'orgaos' && events[displayEvent].orgaos.map(org => <Orgao key={org.id} {...org} />)}
             </div>
           </div>
         </div>

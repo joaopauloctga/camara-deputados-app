@@ -1,8 +1,9 @@
 @import '../../../styles/variables.scss';
 .breadcrumb {
   @apply container mx-auto;
-
   ul {
+    margin-top: 2px;
+    padding: 5px;
     @apply flex flex-wrap;
 
     li {

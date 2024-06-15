@@ -8,9 +8,11 @@ import GoToLink from '../goto-link';
 function PropositionItem({deputadoId, id, descricaoTipo, dataApresentacao, ementa, statusProposicao}) {
   return (
     <Link href={`/deputados/${deputadoId}/proposicoes/${id}`}>
-      <h6 className='text-md t-primary'>{descricaoTipo} publicado em {dataApresentacao}</h6>
-      <p className='bg-white p-2 rounded-sm border border-color-1'>{ementa}</p>
-      <h6 className='text-sm'>Último status: {statusProposicao?.dataHora} - {statusProposicao?.descricaoSituacao || 'sem descrição'}</h6>
+      <div className='mb-2 bg-white p-2 rounded-lg border border-color-1'>
+        <h6 className='text-md t-primary underline underline-offset-2'>{descricaoTipo} publicado em {dataApresentacao}</h6>
+        <p className='my-2'>{ementa}</p>
+        <h6 className='text-xs'>Último status: {statusProposicao?.dataHora} - {statusProposicao?.descricaoSituacao || 'sem descrição'}</h6>
+      </div>
     </Link>
   )
 }
@@ -18,21 +20,15 @@ function PropositionItem({deputadoId, id, descricaoTipo, dataApresentacao, ement
 const DeputadoProposicoes = ({ deputadoId }) => {
   // @todo update to get this temas by API.
   const codTemas = Array.from({ length: 53 }, (_, index) => 34 + index);
-  const url = `proposicoes?ordenarPor=ano&ordem=desc&idDeputadoAutor=${deputadoId}&itens=5&codTema=${codTemas.join(',')}`;
+  const url = `proposicoes?ordenarPor=ano&ordem=desc&idDeputadoAutor=${deputadoId}&itens=4&codTema=${codTemas.join(',')}`;
   const [proposicoes, setProposicoes] = useState([]);
   const {isLoading, result, totalItems} = useCamaraAPI({
     url,
     subRequest: true,
-    config: {
-      subReqProxy: true
-    }
+    // config: {
+    //   subReqProxy: true
+    // }
   });
-
-  useEffect(() => {
-    if (!isLoading) {
-      setProposicoes(result);
-    }
-  }, [isLoading]);
 
   return (
     <div className="flex flex-wrap px-6 py-2">
@@ -43,14 +39,11 @@ const DeputadoProposicoes = ({ deputadoId }) => {
         </div>
       </div>
       <div className="w-full lg:w-5/6">
-        {isLoading ? <LoadingAPI /> : <>
-          <ul>
-            {proposicoes.map((p) => (
-              <li className='mb-4' key={p.id}><PropositionItem deputadoId={deputadoId} key={p.id} {...p} /></li>
-            ))}
-          </ul>
-          
-        </>}
+        <ul>
+          {result.map((p) => (
+            <li className='mb-4' key={p.id}><PropositionItem deputadoId={deputadoId} key={p.id} {...p} /></li>
+          ))}
+        </ul>
       </div>
       <div className='text-center w-full p-2'>
         <GoToLink label={'Ver proposições do deputado'} link={`/deputados/${deputadoId}/proposicoes`} />

@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 
-export const deputadoExpenses = (deputadoId) => {
-  
+export const useDeputadoExpenses = (deputadoId) => {
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  
   useEffect(() => {
     const fetchExpenses = async () => {
       try {

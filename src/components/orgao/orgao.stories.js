@@ -53,7 +53,7 @@ export const OrgaosStory = {
     }
     ]
     return <div className="flex flex-wrap">
-      {orgaos.map(orgao => <div className="w-1/2"><Orgao {...orgao} /></div>)}
+      {orgaos.map(orgao => <div key={`orgao-${orgao.id}`} className="w-1/2"><Orgao key={orgao.id} {...orgao} /></div>)}
     </div>
   }
 }

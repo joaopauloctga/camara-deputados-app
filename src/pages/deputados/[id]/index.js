@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import Panel from "@/components/panel/panel";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookOpen, faChartPie, faCalendar, faHandPointer } from "@fortawesome/free-solid-svg-icons";
@@ -6,17 +6,29 @@ import CamaraPie from "@/components/charts/camara-pie";
 import CamaraBar from "@/components/charts/camara-bar";
 
 import DeputadoProposicoes from "@/components/deputado/DeputadoProposicoes";
-import { deputadoExpenses } from "@/components/deputado/DeputadoExpenses";
 import Events from "@/components/eventos/Events";
-import DeputadoActivity from "@/components/deputado/DeputadoActivity";
 import DeputadoCurriculo from "@/components/deputado/DeputadoCurriculo";
 import DeputadoProfile from "@/components/deputado/DeputadoProfile";
 import DeputadoVotos from "@/components/deputado/DeputadoVotos";
-import GoToLink from "@/components/goto-link";
+import { useDeputadoExpenses } from "@/hooks/useDeputadoExpenses";
+import { getData } from "..";
+import LoadingAPI from "@/components/loading";
 
-export const getServerSideProps = async ({query}) => {
-  const {id} = query;
-  const data = await (await fetch(`https://dadosabertos.camara.leg.br/api/v2/deputados/${id}`)).json();
+
+export const getStaticPaths = async () => {
+  const deputados = await getData('deputados');
+  const paths = deputados.map(dep => {
+    return {
+      params: {
+        id: dep.id.toString()
+      }
+    }
+  });
+  return { paths, fallback: 'blocking' };
+}
+
+export const getStaticProps = async ({params}) => {
+  const data = await (await fetch(`https://dadosabertos.camara.leg.br/api/v2/deputados/${params.id}`)).json();
   return {
     props: {
       deputado: {
@@ -29,7 +41,7 @@ export const getServerSideProps = async ({query}) => {
 
 function DeputadoPage({deputado}) {
   const id = deputado.id
-  const { expenses, loading } = deputadoExpenses(id);
+  const { expenses, loading } = useDeputadoExpenses(id);
   const [expenseByMonth, updateTotalExpenseByMonth] = useState(0);
   const [expenseByType, updateExpenseByType] = useState(0);
   const [dateEvent, updateDateEvent] = useState(new Date());
@@ -65,15 +77,17 @@ function DeputadoPage({deputado}) {
     fetch(`https://dadosabertos.camara.leg.br/api/v2/deputados/${id}/eventos?dataInicio=${data.join('-')}&dataFim=${data.join('-')}`)
       .then((resp) => resp.json())
       .then(({dados}) => setEventsByDate(dados))
-  }, [dateEvent, id])
+  }, [dateEvent, id]);
 
   return <>
     
     <DeputadoProfile deputado={deputado} />
 
-    <Panel id="proposicoes" title={'Proposições'} icon={<FontAwesomeIcon icon={faBookOpen} />}>
-      <DeputadoProposicoes deputadoId={id} />
-    </Panel>
+    <Suspense fallback={<p>Loading.....</p>}>
+      <Panel id="proposicoes" title={'Proposições'} icon={<FontAwesomeIcon icon={faBookOpen} />}>
+        <DeputadoProposicoes deputadoId={id} />
+      </Panel>
+    </Suspense>
 
     <div className="m-8"></div>
 
@@ -103,7 +117,8 @@ function DeputadoPage({deputado}) {
     <div className="m-8"></div>
     
     <Panel right id="atividade" title={'Atividade Parlamentar'} icon={<FontAwesomeIcon icon={faBookOpen} />}>
-      <DeputadoActivity id={id} />
+      {/* <DeputadoActivity id={id} /> */}
+      <h1 className="m-4">To be refactored!</h1>
     </Panel>
 
     <div className="m-8"></div>

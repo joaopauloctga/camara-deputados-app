@@ -1,6 +1,8 @@
+"use client";
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import theme from './header.module.scss'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faBuildingFlag, faFileLines, faCalendarDays, faHome } from "@fortawesome/free-solid-svg-icons";
 import Image from 'next/image';
@@ -43,7 +45,7 @@ const Header = ({currentRoute}) => {
   }
 
   return (
-    <nav className="bg-1 flex items-center">
+    <nav className={`bg-1 flex items-center ${theme.header}`}>
       <div className="container mx-auto flex justify-between items-center">
         <div>
           <Link href="/">

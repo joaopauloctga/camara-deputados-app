@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import '../styles.css'
 import '../../styles/global.css';
 import themeArea from '@/pages/theme-area.module.scss';
-import Header from '@/app/header';
+import Header from '@/components/header/header';
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 config.autoAddCss = false

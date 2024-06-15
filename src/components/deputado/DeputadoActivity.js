@@ -17,7 +17,7 @@ function DeputadoFrentes({id}) {
     let data = result;
     data = data.filter(frente => search == '' || frente.titulo.includes(search))
     setFrentes(data)
-  }, [isLoading,, search]);
+  }, [isLoading, search]);
 
   if (isLoading) {
     return <LoadingAPI />
@@ -40,20 +40,23 @@ function DeputadoFrentes({id}) {
 }
 
 function DeputadoOrgaos({id}) {
-  if (id == undefined) {
-    return <LoadingAPI />
-  }
   const [orgaos, setOrgaos] = useState([]);
 
   useEffect(() => {
     fetch(`https://dadosabertos.camara.leg.br/api/v2/deputados/${id}/orgaos`)
       .then(resp => resp.json())
       .then(({dados}) => setOrgaos(dados));
-  }, [])
+  }, []);
+
+  if (id == undefined) {
+    return <LoadingAPI />
+  }
 
   if (orgaos.length == 0) {
     return <LoadingAPI />
   }
+
+
   
   return <div className="rounded-lg bg-white grid grid-gap-4 grid-cols-1 lg:grid-cols-2 auto-rows-auto">
     {orgaos.map((orgao, index) => {
