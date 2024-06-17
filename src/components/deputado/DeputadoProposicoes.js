@@ -4,14 +4,15 @@ import Link from 'next/link';
 import useCamaraAPI from '@/hooks/useCamaraAPI';
 import LoadingAPI from '../loading';
 import GoToLink from '../goto-link';
+import { formatDate } from '@/utils/common';
 
 function PropositionItem({deputadoId, id, descricaoTipo, dataApresentacao, ementa, statusProposicao}) {
   return (
     <Link href={`/deputados/${deputadoId}/proposicoes/${id}`}>
       <div className='mb-2 bg-white p-2 rounded-lg border border-color-1'>
-        <h6 className='text-md t-primary underline underline-offset-2'>{descricaoTipo} publicado em {dataApresentacao}</h6>
+        <h6 className='text-md t-primary underline underline-offset-2'>{descricaoTipo} publicado em {formatDate(dataApresentacao)}</h6>
         <p className='my-2'>{ementa}</p>
-        <h6 className='text-xs'>Último status: {statusProposicao?.dataHora} - {statusProposicao?.descricaoSituacao || 'sem descrição'}</h6>
+        <h6 className='text-xs'>Último status: {formatDate(statusProposicao?.dataHora)} - {statusProposicao?.descricaoSituacao || 'sem descrição'}</h6>
       </div>
     </Link>
   )

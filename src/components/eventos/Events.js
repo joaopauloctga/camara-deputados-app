@@ -71,7 +71,7 @@ function Events({events, dateEvent, callbackDateChange}) {
       <div className="w-full lg:w-1/12 p-4">
         <PaginationDate setDate={handlerChangeDate} startDate={dateEvent} numDates={2} />
       </div>
-      {events.length ==0 && <>
+      {events.length == 0 && <>
         <div className="lg:w-11/12 flex flex-col justify-center items-center">
           <FontAwesomeIcon className="t-primary" style={{fontSize: '10rem'}} icon={faCalendarXmark} />
           <h3 className="t1 mb-2 t-primary"> Sem agenda</h3>

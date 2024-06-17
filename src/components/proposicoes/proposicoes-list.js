@@ -79,7 +79,6 @@ function ProposicoesList({deputadoId}) {
 
     setUrl(`proposicoes?ordenarPor=ano&ordem=desc&itens=${itens}${deputadoFilter}${codTemas}${codTramitacao}${siglaTipo}${keywords}`);
   }, [temasChecked, statusCodeChecked, siglaTiposChecked, keywordsFilter, deputadoId, isFiltering, initialFetchUrl]);
-
   return <div className="flex flex-wrap">
     <div className="hidden lg:block w-1/6">
       {codProposicoes.isLoading

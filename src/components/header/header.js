@@ -6,28 +6,31 @@ import theme from './header.module.scss'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faBuildingFlag, faFileLines, faCalendarDays, faHome } from "@fortawesome/free-solid-svg-icons";
 import Image from 'next/image';
+import { usePathname } from 'next/navigation'
 
-const Header = ({currentRoute}) => {
+const Header = () => {
+  const pathname = usePathname()
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const router = useRouter();
+  // const router = useRouter();
 
-  useEffect(() => {
-    const handleRouteChange = (url) => {
-      setIsMenuOpen(false);
-    };
+  // useEffect(() => {
+  //   const handleRouteChange = (url) => {
+  //     setIsMenuOpen(false);
+  //   };
 
-    // Listen for route changes
-    router.events.on('routeChangeComplete', handleRouteChange);
+  //   // Listen for route changes
+  //   router.events.on('routeChangeComplete', handleRouteChange);
 
-    // Clean up the event listener when the component is unmounted
-    return () => {
-      router.events.off('routeChangeComplete', handleRouteChange);
-    };
-  }, [router.events]);
+  //   // Clean up the event listener when the component is unmounted
+  //   return () => {
+  //     router.events.off('routeChangeComplete', handleRouteChange);
+  //   };
+  // }, [router.events]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
   const links = [
     ['Home', '/', faHome],
     ['Deputados', '/deputados', faUser],
@@ -40,8 +43,8 @@ const Header = ({currentRoute}) => {
   const linkActive = 'bg-white t-secondary';
 
   const menuLinkIsActive = (menuLink) => {
-    const nestedRoute = currentRoute?.pathname.includes(menuLink) && currentRoute?.pathname.includes('[id]')
-    return menuLink == currentRoute?.pathname
+    const nestedRoute = pathname.includes(menuLink) && pathname.includes('[id]')
+    return menuLink == pathname
   }
 
   return (
